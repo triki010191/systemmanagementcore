@@ -27,11 +27,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-surface text-on-surface font-sans text-body-md overflow-hidden flex h-screen antialiased">
-    <aside class="fixed left-0 top-0 h-full w-[260px] overflow-y-auto z-50 bg-on-tertiary-fixed border-r border-outline-variant flex flex-col custom-scrollbar">
-        <div class="p-lg">
-            <h1 class="font-semibold text-headline-md text-surface-container-lowest tracking-tight">{{ $companyName }}</h1>
-            <p class="text-label-caps text-tertiary-fixed-dim opacity-70 mt-xs">{{ __('hfnms.enterprise_management_system') }}</p>
+<body
+    x-data="{ sidebarOpen: false }"
+    @keydown.escape.window="sidebarOpen = false"
+    class="bg-surface text-on-surface font-sans text-body-md overflow-hidden flex h-dvh antialiased"
+>
+    {{-- Mobile sidebar backdrop --}}
+    <div
+        x-show="sidebarOpen"
+        x-transition:enter="transition-opacity ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        @click="sidebarOpen = false"
+        class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+        x-cloak
+    ></div>
+
+    <aside
+        class="fixed left-0 top-0 h-full w-[260px] max-w-[85vw] overflow-y-auto z-50 bg-on-tertiary-fixed border-r border-outline-variant flex flex-col custom-scrollbar transition-transform duration-300 ease-in-out -translate-x-full lg:translate-x-0"
+        :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+    >
+        <div class="p-lg flex items-start justify-between gap-sm">
+            <div class="min-w-0">
+                <h1 class="font-semibold text-headline-md text-surface-container-lowest tracking-tight truncate">{{ $companyName }}</h1>
+                <p class="text-label-caps text-tertiary-fixed-dim opacity-70 mt-xs">{{ __('hfnms.enterprise_management_system') }}</p>
+            </div>
+            <button
+                type="button"
+                @click="sidebarOpen = false"
+                class="lg:hidden shrink-0 p-xs rounded hover:bg-on-tertiary-fixed-variant text-tertiary-fixed-dim"
+                aria-label="Close menu"
+            >
+                <span class="material-symbols-outlined text-[20px]">close</span>
+            </button>
         </div>
 
         <nav class="flex-1 px-sm">
@@ -45,11 +76,12 @@
                     @endphp
                     <li>
                         <a href="{{ $href }}"
+                           @click="sidebarOpen = false"
                            class="flex items-center px-lg py-md transition-colors duration-200 border-l-[3px] {{ $isActive
                                ? 'border-primary-container bg-on-tertiary-fixed-variant text-on-tertiary-container font-semibold'
                                : 'border-transparent text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant' }}">
-                            <span class="material-symbols-outlined mr-md text-[20px]">{{ $icon }}</span>
-                            <span class="text-body-md">{{ $item->label }}</span>
+                            <span class="material-symbols-outlined mr-md text-[20px] shrink-0">{{ $icon }}</span>
+                            <span class="text-body-md truncate">{{ $item->label }}</span>
                         </a>
                     </li>
                 @endforeach
@@ -61,16 +93,24 @@
         </div>
     </aside>
 
-    <main class="ml-[260px] flex-1 flex flex-col h-screen overflow-hidden bg-surface">
-        <header class="flex justify-between items-center h-16 px-lg bg-surface border-b border-outline-variant z-40 sticky top-0 shrink-0">
-            <div class="flex items-center gap-md min-w-0">
+    <main class="flex-1 flex flex-col h-dvh overflow-hidden bg-surface w-full min-w-0 lg:ml-[260px]">
+        <header class="flex justify-between items-center min-h-16 h-auto py-sm sm:py-0 sm:h-16 px-md sm:px-lg bg-surface border-b border-outline-variant z-30 sticky top-0 shrink-0 gap-sm">
+            <div class="flex items-center gap-sm min-w-0 flex-1">
+                <button
+                    type="button"
+                    @click="sidebarOpen = !sidebarOpen"
+                    class="lg:hidden shrink-0 p-xs rounded hover:bg-surface-container-low text-on-surface-variant"
+                    aria-label="Open menu"
+                >
+                    <span class="material-symbols-outlined text-[22px]">menu</span>
+                </button>
                 @isset($header)
-                    <div class="min-w-0">{{ $header }}</div>
+                    <div class="min-w-0 flex-1">{{ $header }}</div>
                 @else
                     <span class="font-semibold text-headline-md text-primary truncate">{{ $companyName }}</span>
                 @endisset
             </div>
-            <div class="flex items-center gap-md shrink-0" x-data="notificationBell()" x-init="load()">
+            <div class="flex items-center gap-sm sm:gap-md shrink-0" x-data="notificationBell()" x-init="load()">
                 <div class="relative">
                     <button type="button" @click="open = !open" class="relative p-xs rounded hover:bg-surface-container-low">
                         <span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</span>
@@ -78,7 +118,7 @@
                               class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-error text-white text-[10px] font-bold flex items-center justify-center"></span>
                     </button>
                     <div x-show="open" @click.outside="open = false" x-cloak
-                         class="absolute right-0 mt-sm w-80 bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg z-50 overflow-hidden">
+                         class="absolute right-0 mt-sm w-[min(20rem,calc(100vw-2rem))] bg-surface-container-lowest border border-outline-variant rounded-lg shadow-lg z-50 overflow-hidden">
                         <div class="px-md py-sm border-b border-outline-variant flex justify-between items-center">
                             <span class="text-label-caps text-on-surface-variant">{{ __('hfnms.notifications') }}</span>
                             <a href="{{ route('notifications.index') }}" class="text-[11px] text-primary font-semibold">{{ __('hfnms.view_all') }}</a>
@@ -107,7 +147,7 @@
             </div>
         </header>
 
-        <section class="flex-1 overflow-y-auto p-lg custom-scrollbar">
+        <section class="flex-1 overflow-y-auto p-md sm:p-lg custom-scrollbar min-w-0">
             {{ $slot }}
         </section>
     </main>

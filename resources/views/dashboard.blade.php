@@ -1,11 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-end justify-between gap-md w-full">
-            <div>
-                <h2 class="font-semibold text-headline-md text-on-surface">{{ __('hfnms.dashboard_title') }}</h2>
-                <p class="text-body-sm text-on-surface-variant">{{ __('hfnms.dashboard_subtitle') }}</p>
+        <div class="flex flex-wrap items-end justify-between gap-sm sm:gap-md w-full">
+            <div class="min-w-0">
+                <h2 class="font-semibold text-lg sm:text-headline-md text-on-surface truncate">{{ __('hfnms.dashboard_title') }}</h2>
+                <p class="text-body-sm text-on-surface-variant line-clamp-2 sm:line-clamp-none">{{ __('hfnms.dashboard_subtitle') }}</p>
             </div>
-            <p class="text-[11px] text-on-surface-variant font-mono">{{ now()->format('d M Y · H:i') }}</p>
+            <p class="text-[10px] sm:text-[11px] text-on-surface-variant font-mono shrink-0">{{ now()->format('d M Y · H:i') }}</p>
         </div>
     </x-slot>
 

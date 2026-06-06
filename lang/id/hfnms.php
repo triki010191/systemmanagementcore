@@ -92,6 +92,9 @@ return [
     'gis_all_types' => 'Semua tipe',
     'gis_cable_legend' => 'Warna Kabel',
     'gis_link_legend' => 'Jenis Koneksi',
+    'gis_panel_title' => 'Pengaturan Peta',
+    'gis_show_panel' => 'Layer',
+    'gis_hide_panel' => 'Sembunyikan panel',
 
     'network_assets' => 'Manajemen Aset Jaringan',
     'add_asset' => 'Tambah :type',

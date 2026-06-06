@@ -21,13 +21,13 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-surface text-on-surface font-sans text-body-md min-h-screen flex flex-col items-center justify-center relative overflow-hidden antialiased">
-    <div class="absolute inset-0 technical-pattern z-0"></div>
-    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary opacity-5 blur-[120px] rounded-full"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary opacity-5 blur-[120px] rounded-full"></div>
+<body class="bg-surface text-on-surface font-sans text-body-md min-h-dvh flex flex-col items-center justify-start sm:justify-center relative overflow-x-hidden overflow-y-auto antialiased py-lg sm:py-xl">
+    <div class="absolute inset-0 technical-pattern z-0 pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
 
-    <main class="relative z-10 w-full max-w-[420px] px-lg">
-        <div class="flex flex-col items-center mb-xl">
+    <main class="relative z-10 w-full max-w-[420px] px-lg flex-shrink-0">
+        <div class="flex flex-col items-center mb-lg sm:mb-xl">
             <div class="mb-md flex items-center justify-center bg-primary-container p-sm rounded-lg shadow-sm">
                 <span class="material-symbols-outlined text-on-primary-container text-[32px]" style="font-variation-settings: 'FILL' 1;">router</span>
             </div>
@@ -52,7 +52,7 @@
         </div>
     </main>
 
-    <footer class="mt-xl relative z-10 w-full flex justify-center pb-xl">
+    <footer class="mt-lg sm:mt-xl relative z-10 w-full flex justify-center pb-lg sm:pb-xl flex-shrink-0">
         <x-language-switcher />
     </footer>
 </body>

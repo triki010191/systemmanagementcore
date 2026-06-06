@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Services\Cms\ModuleService;
 use App\Services\Cms\NavigationService;
 use App\Services\Cms\SettingsService;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $appUrl = (string) config('app.url');
+        $host = parse_url($appUrl, PHP_URL_HOST) ?: '';
+
+        if ($host !== '' && ! in_array($host, ['127.0.0.1', 'localhost'], true)) {
+            URL::forceRootUrl(rtrim($appUrl, '/'));
+
+            if (str_starts_with($appUrl, 'https://')) {
+                URL::forceScheme('https');
+            }
+        }
+
         View::composer(['layouts.app', 'dashboard', 'network.*', 'components.network.*', 'admin.*'], function ($view) {
             $view->with('cmsSettings', app(SettingsService::class)->getPublic());
             $view->with('cmsNavigation', app(NavigationService::class)->forLocation('sidebar'));

@@ -20,7 +20,7 @@
             <div class="mb-md px-md py-sm bg-green-50 border border-green-200 text-success rounded-lg text-body-sm">{{ session('success') }}</div>
         @endif
 
-        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-x-auto">
             <table class="w-full text-body-sm">
                 <thead class="bg-surface-container-low text-on-surface-variant text-label-caps">
                     <tr>

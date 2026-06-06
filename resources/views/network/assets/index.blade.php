@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden">
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-x-auto">
             <table class="w-full text-body-sm">
                 <thead class="bg-surface-container-low text-on-surface-variant text-label-caps">
                     <tr>

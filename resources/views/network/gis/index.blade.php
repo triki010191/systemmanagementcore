@@ -23,13 +23,54 @@
         </div>
     </x-slot>
 
-    <div class="flex flex-col -mx-lg -my-lg h-[calc(100vh-4rem)]">
-        <div class="relative flex-1 min-h-0">
+    <div class="flex flex-col -mx-md sm:-mx-lg -my-md sm:-my-lg h-[calc(100dvh-4rem)] min-h-[420px]">
+        <div class="relative flex-1 min-h-0" x-data="{ panelOpen: false }">
             <div id="gis-map" class="absolute inset-0 z-0"></div>
 
+            {{-- Mobile: backdrop when panel open --}}
+            <div
+                x-show="panelOpen"
+                x-transition:enter="transition-opacity ease-out duration-200"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-opacity ease-in duration-150"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                @click="panelOpen = false"
+                class="lg:hidden fixed inset-0 bg-black/40 z-[490]"
+                x-cloak
+            ></div>
+
+            {{-- Mobile: floating button to open panel --}}
+            <button
+                type="button"
+                @click="panelOpen = true"
+                x-show="!panelOpen"
+                class="lg:hidden absolute bottom-md right-md z-[500] flex items-center gap-xs px-md py-sm rounded-full bg-primary text-on-primary shadow-lg font-semibold text-body-sm"
+                x-cloak
+            >
+                <span class="material-symbols-outlined text-[20px]">layers</span>
+                {{ __('hfnms.gis_show_panel') }}
+            </button>
+
             {{-- Layer controls --}}
-            <div class="absolute top-md left-md z-[500] w-[280px] max-h-[calc(100%-2rem)] overflow-y-auto custom-scrollbar">
+            <div
+                class="absolute top-md left-md right-md sm:right-auto z-[500] w-auto sm:w-[280px] max-w-[280px] max-h-[calc(100%-2rem)] overflow-y-auto custom-scrollbar"
+                :class="panelOpen ? 'block' : 'hidden lg:block'"
+            >
                 <div class="bg-white/95 backdrop-blur-sm rounded-lg border border-outline-variant shadow-lg p-md space-y-md">
+                    <div class="flex items-center justify-between gap-sm lg:hidden">
+                        <p class="text-label-caps text-on-surface-variant">{{ __('hfnms.gis_panel_title') }}</p>
+                        <button
+                            type="button"
+                            @click="panelOpen = false"
+                            class="p-xs rounded hover:bg-surface-container-low text-on-surface-variant"
+                            aria-label="{{ __('hfnms.gis_hide_panel') }}"
+                        >
+                            <span class="material-symbols-outlined text-[20px]">close</span>
+                        </button>
+                    </div>
+
                     <div>
                         <p class="text-label-caps text-on-surface-variant mb-sm">{{ __('hfnms.gis_base_map') }}</p>
                         <div class="grid grid-cols-2 gap-xs">

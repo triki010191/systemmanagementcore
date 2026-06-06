@@ -92,6 +92,9 @@ return [
     'gis_all_types' => 'All types',
     'gis_cable_legend' => 'Cable Colors',
     'gis_link_legend' => 'Connection Types',
+    'gis_panel_title' => 'Map Settings',
+    'gis_show_panel' => 'Layers',
+    'gis_hide_panel' => 'Hide panel',
 
     'network_assets' => 'Network Asset Management',
     'add_asset' => 'Add :type',
