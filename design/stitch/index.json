@@ -1,0 +1,63 @@
+{
+  "projectId": "14513084044404878557",
+  "fetchedAt": "2026-06-05T14:27:59.836Z",
+  "screens": [
+    {
+      "slug": "01-design-system",
+      "title": "Design System",
+      "screenId": "asset-stub-assets_3a96f71153e44449b0c73cee156b999f",
+      "downloads": [],
+      "error": "Request contains an invalid argument."
+    },
+    {
+      "slug": "02-login",
+      "title": "Login System",
+      "screenId": "c8f1407c758b4d948c2ad9f975d2ba34",
+      "downloads": [
+        "screen.html",
+        "screenshot.jpg"
+      ],
+      "error": null
+    },
+    {
+      "slug": "03-dashboard-eksekutif",
+      "title": "Dasbor Eksekutif",
+      "screenId": "234583316c304dfb82e0349d293ae935",
+      "downloads": [
+        "screen.html",
+        "screenshot.jpg"
+      ],
+      "error": null
+    },
+    {
+      "slug": "04-alat-penelusuran-jalur",
+      "title": "Alat Penelusuran Jalur",
+      "screenId": "5ec4d33bb82d4577a4b142910d5a1c0d",
+      "downloads": [
+        "screen.html",
+        "screenshot.jpg"
+      ],
+      "error": null
+    },
+    {
+      "slug": "05-manajemen-kabel",
+      "title": "Manajemen Kabel",
+      "screenId": "6fc50d19ed42423e94d615fe08b2261c",
+      "downloads": [
+        "screen.html",
+        "screenshot.jpg"
+      ],
+      "error": null
+    },
+    {
+      "slug": "06-peta-jaringan-gis",
+      "title": "Peta Jaringan GIS",
+      "screenId": "e44acdc913604f55b3859fe37786b8a5",
+      "downloads": [
+        "screen.html",
+        "screenshot.jpg"
+      ],
+      "error": null
+    }
+  ]
+}

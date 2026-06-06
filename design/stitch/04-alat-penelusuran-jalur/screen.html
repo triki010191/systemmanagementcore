@@ -1,0 +1,453 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Hinet Fiber - Fiber Path Tracing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#0b1c30",
+                        "outline": "#737687",
+                        "on-background": "#191c1e",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-dim": "#d8dadc",
+                        "surface-container": "#eceef0",
+                        "surface-tint": "#0053da",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c2c6d9",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-surface": "#2d3133",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#eef3ff",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-fixed": "#00174b",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-container": "#dae2fd",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#48586d",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#dbe1ff",
+                        "primary-container": "#0062ff",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#607087",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "primary": "#004cca",
+                        "background": "#f7f9fb",
+                        "on-primary-container": "#f3f3ff",
+                        "surface-bright": "#f7f9fb",
+                        "on-surface-variant": "#424656",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "surface": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "container_max": "1600px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "sidebar_width": "260px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "mono-data": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .path-trace-node::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -24px;
+            width: 24px;
+            height: 2px;
+            background: #c2c6d9;
+            transform: translateY(-50%);
+        }
+        .path-trace-node:last-child::after {
+            display: none;
+        }
+        .zebra-table tr:nth-child(even) {
+            background-color: #f2f4f6;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-[260px] overflow-y-auto bg-on-tertiary-fixed border-r border-outline-variant z-50 transition-all duration-300">
+<div class="p-lg">
+<h1 class="font-headline-sm text-headline-sm font-bold text-surface-container-lowest tracking-tight">Hinet Fiber</h1>
+<p class="font-body-sm text-body-sm text-tertiary-fixed-dim opacity-70">Manajemen Perusahaan</p>
+</div>
+<nav class="mt-md space-y-px">
+<!-- Navigation Items -->
+<a class="flex items-center px-lg py-md text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center px-lg py-md text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="map">map</span>
+<span class="font-body-md text-body-md">Peta Jaringan</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center px-lg py-md border-l-[3px] border-primary-container bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="route">route</span>
+<span class="font-body-md text-body-md">Fiber Path Tracing</span>
+</a>
+<a class="flex items-center px-lg py-md text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="router">router</span>
+<span class="font-body-md text-body-md">POP / OLT</span>
+</a>
+<a class="flex items-center px-lg py-md text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-md" data-icon="account_tree">account_tree</span>
+<span class="font-body-md text-body-md">Manajemen OTB</span>
+</a>
+<div class="px-lg py-md mt-lg border-t border-on-tertiary-fixed-variant">
+<label class="font-label-caps text-label-caps text-tertiary-fixed-dim opacity-50 block mb-sm">CARI PELANGGAN</label>
+<div class="relative">
+<input class="w-full bg-on-tertiary-fixed-variant border-none rounded text-white text-sm focus:ring-2 focus:ring-primary-container transition-all py-sm px-md" placeholder="ID atau Telepon..." type="text">
+<span class="material-symbols-outlined absolute right-2 top-2 text-tertiary-fixed-dim text-sm" data-icon="search">search</span>
+</div>
+</div>
+<!-- Customer Search Results Simulator -->
+<div class="px-lg py-sm space-y-2 max-h-[300px] overflow-y-auto">
+<div class="p-sm bg-primary-container/10 border border-primary-container/20 rounded cursor-pointer group">
+<div class="text-on-tertiary-container font-bold text-sm">CST-882901</div>
+<div class="text-tertiary-fixed-dim text-xs opacity-80">James Anderson</div>
+<div class="flex items-center mt-xs">
+<span class="w-2 h-2 rounded-full bg-green-500 mr-2 shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
+<span class="text-[10px] text-green-400">Online</span>
+</div>
+</div>
+<div class="p-sm hover:bg-on-tertiary-fixed-variant rounded cursor-pointer transition-colors border border-transparent">
+<div class="text-tertiary-fixed-dim font-bold text-sm">CST-449102</div>
+<div class="text-tertiary-fixed-dim text-xs opacity-60">Sarah Miller</div>
+</div>
+</div>
+</nav>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-[260px] h-screen flex flex-col overflow-hidden bg-background">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center h-16 px-lg w-full bg-surface border-b border-outline-variant sticky top-0 z-50">
+<div class="flex items-center">
+<h2 class="font-headline-md text-headline-md font-bold text-primary mr-lg">Sistem Manajemen Fiber</h2>
+<div class="h-6 w-px bg-outline-variant mr-lg"></div>
+<div class="flex items-center space-x-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">ID Trace:</span>
+<span class="font-mono-data text-mono-data bg-surface-container-high px-sm py-xs rounded">TRC-FX-9921-A</span>
+</div>
+</div>
+<div class="flex items-center space-x-md">
+<button class="flex items-center justify-center p-sm rounded-full hover:bg-surface-container-high transition-all text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="flex items-center justify-center p-sm rounded-full hover:bg-surface-container-high transition-all text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Admin" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgyjsiV7D3uCXr-yebkY5seMzrBBe9VaEn8cJNTkTHKVW1MUbehFXkbdkyo4mtn2vIC03GymbjMKMmY0VHxCfjykjUqDiYip8AFOWTYOgpbE5C5cTRdW-N5gyeax7yTcxVO7RBhxZpcwVW0G9E2PYGnQP5nJO1CGS__ZBSnLehNOU8mm0fpdONttFzWtbyzO6Kyoz7NTurbFIZzbsxKi65bcGM3ZzuHJ7qUfPplO5tdu2ZtqOwuP8eLXu1wCMxraPRN4592U3xp6TB">
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto p-lg max-w-[1600px] w-full mx-auto space-y-gutter"><nav class="flex items-center space-x-sm mb-md">
+    <div class="flex items-center text-on-surface-variant opacity-60">
+        <span class="text-label-caps">Peta Jaringan GIS</span>
+        <span class="material-symbols-outlined text-sm ml-xs">chevron_right</span>
+    </div>
+    <div class="flex items-center text-primary font-bold">
+        <span class="text-label-caps">Penelusuran Jalur Fiber</span>
+        <span class="material-symbols-outlined text-sm ml-xs text-on-surface-variant opacity-60">chevron_right</span>
+    </div>
+    <div class="flex items-center text-on-surface-variant opacity-60">
+        <span class="text-label-caps">Manajemen Kabel</span>
+    </div>
+</nav>
+<!-- Section Title & Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Path Trace: James Anderson</h3>
+<p class="text-on-surface-variant font-body-md">Jalur sinyal real-time dari Premis Pelanggan ke Core Exchange</p>
+</div>
+<div class="flex space-x-md">
+<button class="px-md py-sm bg-surface-container-lowest border border-outline-variant rounded flex items-center hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined mr-sm text-[20px]" data-icon="file_download">file_download</span>
+                        Ekspor Laporan
+                    </button>
+<button class="px-md py-sm bg-primary text-white rounded flex items-center hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined mr-sm text-[20px]" data-icon="refresh">refresh</span>
+                        Pindai Ulang Port
+                    </button>
+</div>
+</div>
+<!-- Path Trace Diagram -->
+<section class="bg-surface-container-lowest border border-outline-variant p-xl relative overflow-hidden rounded-lg">
+<div class="flex items-center justify-between relative z-10">
+<!-- Customer Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-primary-container text-white rounded-full flex items-center justify-center shadow-lg ring-4 ring-primary-container/10">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-primary">PELANGGAN</p>
+<p class="font-mono-data text-mono-data">ONU-8829</p>
+</div>
+</div>
+<!-- ODP Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-surface-container-highest text-on-surface-variant rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps">ODP</p>
+<p class="font-mono-data text-mono-data">P-09-A</p>
+</div>
+</div>
+<!-- Splitter Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-surface-container-highest text-on-surface-variant rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="vlan">lan</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps">SPLITTER</p>
+<p class="font-mono-data text-mono-data">1:16 RATIO</p>
+</div>
+</div>
+<!-- ODC Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-surface-container-highest text-on-surface-variant rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps">ODC</p>
+<p class="font-mono-data text-mono-data">C-WEST-01</p>
+</div>
+</div>
+<!-- OTB Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-surface-container-highest text-on-surface-variant rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps">OTB</p>
+<p class="font-mono-data text-mono-data">TRAY-04</p>
+</div>
+</div>
+<!-- OLT Node -->
+<div class="flex flex-col items-center space-y-sm relative path-trace-node">
+<div class="w-12 h-12 bg-surface-container-highest text-on-surface-variant rounded-lg flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps">OLT</p>
+<p class="font-mono-data text-mono-data">SLOT-02</p>
+</div>
+</div>
+<!-- POP Node -->
+<div class="flex flex-col items-center space-y-sm relative">
+<div class="w-12 h-12 bg-on-tertiary-fixed text-white rounded-full flex items-center justify-center shadow-lg border-2 border-primary">
+<span class="material-symbols-outlined" data-icon="cloud">cloud</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-primary">POP</p>
+<p class="font-mono-data text-mono-data">CORE-X</p>
+</div>
+</div>
+</div>
+<!-- Signal Status Overlay -->
+<div class="mt-xl flex items-center space-x-xl justify-center">
+<div class="flex items-center">
+<span class="w-3 h-3 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+<span class="text-body-sm font-bold">Daya RX: -18.4 dBm</span>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<div class="flex items-center">
+<span class="text-body-sm font-bold">Jarak: 4.2 km</span>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<div class="flex items-center">
+<span class="text-body-sm font-bold">Latensi: 1.2 ms</span>
+</div>
+</div>
+</section>
+<!-- Bottom Grid: Topology & Specs -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Topology Diagram -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-lg">
+<div class="flex justify-between items-center mb-lg">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant">PETA TOPOLOGI FISIK</h4>
+<div class="flex space-x-sm">
+<span class="px-sm py-xs bg-surface-container text-[10px] rounded font-bold">ZOOM: 100%</span>
+</div>
+</div>
+<div class="h-[400px] relative rounded bg-slate-50 overflow-hidden border border-slate-200">
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#737687 1px, transparent 1px); background-size: 20px 20px;"></div>
+<svg class="w-full h-full p-lg" viewBox="0 0 800 400">
+<path d="M100 300 L250 220 L400 180 L600 100" fill="none" opacity="0.3" stroke="#004cca" stroke-dasharray="10 5" stroke-width="4"></path>
+<path d="M100 300 L250 220 L400 180 L600 100" fill="none" stroke="#004cca" stroke-width="2"></path>
+<circle cx="100" cy="300" fill="#004cca" r="8"></circle>
+<circle cx="250" cy="220" fill="#737687" r="6"></circle>
+<circle cx="400" cy="180" fill="#737687" r="6"></circle>
+<circle cx="600" cy="100" fill="#0b1c30" r="10"></circle>
+<text class="text-[12px] font-mono-data" fill="#565e74" x="150" y="270">1.2 km</text>
+<text class="text-[12px] font-mono-data" fill="#565e74" x="320" y="210">0.8 km</text>
+<text class="text-[12px] font-mono-data" fill="#565e74" x="500" y="150">2.2 km</text>
+<text fill="#191c1e" font-weight="bold" x="90" y="330">Pelanggan</text>
+<text fill="#191c1e" font-weight="bold" x="580" y="80">POP CORE-X</text>
+</svg>
+<div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur p-sm border border-outline-variant text-[10px] space-y-1">
+<div class="flex items-center"><span class="w-3 h-[2px] bg-primary mr-2"></span> Kabel Distribusi</div>
+<div class="flex items-center"><span class="w-2 h-2 bg-on-tertiary-fixed rounded-full mr-2"></span> Node Inti</div>
+</div>
+</div>
+</div>
+<!-- Technical Specs Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg flex flex-col">
+<div class="p-lg border-b border-outline-variant">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant">SPESIFIKASI PORT</h4>
+</div>
+<div class="flex-1 overflow-auto">
+<table class="w-full zebra-table">
+<tbody class="font-mono-data text-body-sm">
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">Port ID</td>
+<td class="px-lg py-sm font-bold text-right">PON-01/04/12</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">Panjang Gelombang</td>
+<td class="px-lg py-sm font-bold text-right">1490 nm</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">Tipe Fiber</td>
+<td class="px-lg py-sm font-bold text-right">G.652.D</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">VLAN Tag</td>
+<td class="px-lg py-sm font-bold text-right">3001</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">Posisi ODF</td>
+<td class="px-lg py-sm font-bold text-right">R02-B14-P09</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">Splice Loss</td>
+<td class="px-lg py-sm font-bold text-right text-green-600">0.02 dB</td>
+</tr>
+<tr>
+<td class="px-lg py-sm text-on-surface-variant">IP Binding</td>
+<td class="px-lg py-sm font-bold text-right">172.16.8.44</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-lg bg-surface-container-low border-t border-outline-variant">
+<div class="p-sm bg-error-container/30 border border-error/20 rounded flex items-start">
+<span class="material-symbols-outlined text-error mr-sm text-[20px]" data-icon="report">report</span>
+<div class="text-[11px]">
+<span class="font-bold text-error block">Peringatan: Daya TX Rendah</span>
+<span class="text-on-error-container">Daya pancar dari ONU mendekati ambang batas kritis -22dBm.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- OTDR Analysis Snippet -->
+<section class="bg-surface-container-lowest border border-outline-variant p-lg rounded-lg">
+<div class="flex justify-between items-center mb-md">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant">ANALISIS PULSA OTDR</h4>
+<span class="text-xs text-on-surface-variant italic">Pemindaian terakhir: 2 menit yang lalu</span>
+</div>
+<div class="grid grid-cols-4 gap-md">
+<div class="p-md bg-background border border-outline-variant rounded">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Total Redaman</p>
+<p class="text-xl font-bold">12.4 dB</p>
+</div>
+<div class="p-md bg-background border border-outline-variant rounded">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Reflektansi</p>
+<p class="text-xl font-bold">-45.2 dB</p>
+</div>
+<div class="p-md bg-background border border-outline-variant rounded">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">ORL</p>
+<p class="text-xl font-bold">32.1 dB</p>
+</div>
+<div class="p-md bg-background border border-outline-variant rounded">
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Skor Kesehatan</p>
+<p class="text-xl font-bold text-green-600">94/100</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Simple micro-interactions
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(!link.classList.contains('bg-on-tertiary-fixed-variant')) {
+                    // This is just a demo shell interaction
+                }
+            });
+        });
+
+        // Search highlight simulation
+        const searchInput = document.querySelector('input[placeholder="ID atau Telepon..."]');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.02]');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.02]');
+        });
+    </script>
+
+
+</body></html>

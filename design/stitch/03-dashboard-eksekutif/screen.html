@@ -1,0 +1,583 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Hinet Fiber - Executive Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-tertiary-fixed": "#0b1c30",
+                "outline": "#737687",
+                "on-background": "#191c1e",
+                "on-secondary-fixed-variant": "#3f465c",
+                "secondary-fixed": "#dae2fd",
+                "surface-dim": "#d8dadc",
+                "surface-container": "#eceef0",
+                "surface-tint": "#0053da",
+                "tertiary-fixed": "#d3e4fe",
+                "surface-container-high": "#e6e8ea",
+                "secondary-fixed-dim": "#bec6e0",
+                "on-tertiary": "#ffffff",
+                "error-container": "#ffdad6",
+                "outline-variant": "#c2c6d9",
+                "primary-fixed-dim": "#b4c5ff",
+                "inverse-surface": "#2d3133",
+                "error": "#ba1a1a",
+                "on-secondary-container": "#5c647a",
+                "on-secondary": "#ffffff",
+                "on-tertiary-container": "#eef3ff",
+                "on-primary": "#ffffff",
+                "secondary": "#565e74",
+                "inverse-primary": "#b4c5ff",
+                "on-primary-fixed": "#00174b",
+                "on-secondary-fixed": "#131b2e",
+                "tertiary-fixed-dim": "#b7c8e1",
+                "surface-container-highest": "#e0e3e5",
+                "secondary-container": "#dae2fd",
+                "surface-container-lowest": "#ffffff",
+                "tertiary": "#48586d",
+                "surface-variant": "#e0e3e5",
+                "primary-fixed": "#dbe1ff",
+                "primary-container": "#0062ff",
+                "on-surface": "#191c1e",
+                "tertiary-container": "#607087",
+                "on-error": "#ffffff",
+                "inverse-on-surface": "#eff1f3",
+                "on-tertiary-fixed-variant": "#38485d",
+                "primary": "#004cca",
+                "background": "#f7f9fb",
+                "on-primary-container": "#f3f3ff",
+                "surface-bright": "#f7f9fb",
+                "on-surface-variant": "#424656",
+                "on-primary-fixed-variant": "#003ea8",
+                "surface": "#f7f9fb",
+                "on-error-container": "#93000a",
+                "surface-container-low": "#f2f4f6"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "lg": "24px",
+                "container_max": "1600px",
+                "sm": "8px",
+                "base": "4px",
+                "xs": "4px",
+                "sidebar_width": "260px",
+                "xl": "32px",
+                "md": "16px",
+                "gutter": "20px"
+            },
+            "fontFamily": {
+                "headline-sm": ["Inter"],
+                "label-caps": ["Inter"],
+                "mono-data": ["JetBrains Mono"],
+                "headline-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "body-sm": ["Inter"],
+                "body-md": ["Inter"],
+                "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        vertical-align: middle;
+      }
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: #0b1c30; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #38485d; border-radius: 10px; }
+      .left-border-active { border-left: 3px solid #0062ff; }
+      .sparkline {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: dash 3s linear forwards;
+      }
+      @keyframes dash { to { stroke-dashoffset: 0; } }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden flex h-screen">
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-full w-[260px] overflow-y-auto z-50 bg-on-tertiary-fixed border-r border-outline-variant flex flex-col custom-scrollbar">
+<div class="p-lg">
+<h1 class="font-headline-sm text-headline-sm font-bold text-surface-container-lowest">Hinet Fiber</h1>
+<p class="text-[10px] uppercase tracking-widest text-tertiary-fixed-dim opacity-70">Manajemen Perusahaan</p>
+</div>
+<nav class="flex-1 px-base">
+<ul class="space-y-1">
+<li class="border-l-[3px] border-primary-container bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold px-lg py-sm flex items-center gap-md cursor-pointer group">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+<span class="ml-auto bg-primary text-on-primary text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter">Langkah 1</span></li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-body-md">Network Map</span>
+<span class="ml-auto material-symbols-outlined text-[18px] opacity-50" data-icon="arrow_forward">arrow_forward</span></li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="route">route</span>
+<span class="font-body-md">Fiber Path Tracing</span>
+<span class="ml-auto material-symbols-outlined text-[18px] opacity-50" data-icon="arrow_forward">arrow_forward</span></li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+<span class="font-body-md">POP / OLT</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+<span class="font-body-md">OTB Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="storage">storage</span>
+<span class="font-body-md">ODC Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+<span class="font-body-md">ODP Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="vlan">lan</span>
+<span class="font-body-md">Splitter Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-body-md">Cable Management</span>
+<span class="ml-auto material-symbols-outlined text-[18px] opacity-50" data-icon="arrow_forward">arrow_forward</span></li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+<span class="font-body-md">Core Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md">Customer Management</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-body-md">Trouble Ticket</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md">OTDR Analysis</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner">qr_code_scanner</span>
+<span class="font-body-md">Asset QR Tracking</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-body-md">Reports</span>
+</li>
+<li class="text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200 px-lg py-sm flex items-center gap-md cursor-pointer border-l-[3px] border-transparent">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md">Settings</span>
+</li>
+</ul>
+</nav>
+</aside>
+<!-- Main Workspace -->
+<main class="ml-[260px] flex-1 flex flex-col h-screen overflow-hidden bg-background">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center h-16 px-lg bg-surface border-b border-outline-variant z-40 sticky top-0">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary">Fiber Management System</span>
+<div class="ml-xl flex items-center bg-surface-container-low px-md py-xs rounded-lg border border-outline-variant w-80">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full ml-sm" placeholder="Cari infrastruktur, tiket..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="help">help</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer" data-icon="apps">apps</span>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-sm"></div>
+<div class="flex items-center gap-sm">
+<div class="text-right">
+<p class="font-label-caps text-on-surface leading-tight">Admin User</p>
+<p class="text-[10px] text-outline">Operasi Jaringan</p>
+</div>
+<img alt="Administrator Profile" class="h-9 w-9 rounded-full bg-surface-container-high border border-outline-variant" data-alt="A professional headshot of a network administrator for a corporate profile, set against a clean, minimal office background. The lighting is soft and high-key, reflecting a modern light-mode enterprise aesthetic. The image uses a clean palette of cool grays and whites with sharp, professional focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3jHRZkGP1ma9JPFW2t9PKakDwcsq_Z6hElktbKVD5aDaS8xemvTks014G2RA43FpQsgEwESKjNDAoEbV0fN6linRyTp4ROTdgoXN31kMgBIiwTVISOrNEIvsBKsUNJ83BWsALXHsvLze4sHzg758zYNG9mStPAqNAgDUgnwITRT1XZ5l9jKEqQd3EM2d3k9Kz0tGAgfXi-CWH-c05qe1BBKe1KbD-XZQ_vx6LayHwcELr_92JHxujuWGQMGkZMauYMdKiaOj5xmS_">
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<section class="flex-1 overflow-y-auto p-lg space-y-gutter custom-scrollbar max-w-container_max mx-auto w-full">
+<!-- Dashboard Welcome & Quick Actions -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Ikhtisar Jaringan</h2>
+<p class="text-body-sm text-on-surface-variant">Metrik performa dan kesehatan infrastruktur waktu nyata.</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-lowest border border-outline-variant px-md py-sm rounded text-body-sm font-bold flex items-center gap-xs hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span> Filter
+                    </button>
+<button class="bg-primary text-on-primary px-md py-sm rounded text-body-sm font-bold flex items-center gap-xs hover:bg-on-primary-fixed-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span> Ekspor Laporan
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Total Pelanggan -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Total Pelanggan</span>
+<div class="bg-primary-fixed p-xs rounded">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="group">group</span>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg text-[28px] font-bold">12.842</span>
+<span class="text-[12px] text-green-600 font-bold">+4.2%</span>
+</div>
+<p class="text-[10px] text-outline">Vs bulan sebelumnya</p>
+</div>
+</div>
+<!-- Total ODP -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Total ODP</span>
+<div class="bg-secondary-fixed p-xs rounded">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="lan">lan</span>
+</div>
+</div>
+<div>
+<span class="font-display-lg text-[28px] font-bold">1.405</span>
+<p class="text-[10px] text-outline">Optical Distribution Points</p>
+</div>
+</div>
+<!-- Total ODC -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Total ODC</span>
+<div class="bg-tertiary-fixed p-xs rounded">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="storage">storage</span>
+</div>
+</div>
+<div>
+<span class="font-display-lg text-[28px] font-bold">248</span>
+<p class="text-[10px] text-outline">Optical Distribution Cabinets</p>
+</div>
+</div>
+<!-- Total Kabel Fiber -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Total Kabel Fiber</span>
+<div class="bg-primary-fixed p-xs rounded">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="settings_input_component">settings_input_component</span>
+</div>
+</div>
+<div>
+<span class="font-display-lg text-[28px] font-bold">4.120</span>
+<p class="text-[10px] text-outline">Total KM terpasang</p>
+</div>
+</div>
+<!-- Penggunaan Core Aktif -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Penggunaan Core Aktif</span>
+<div class="bg-blue-50 p-xs rounded">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="memory">memory</span>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-base">
+<span class="font-display-lg text-[28px] font-bold">78.5%</span>
+<span class="text-[12px] text-primary font-bold">Optimal</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78.5%"></div>
+</div>
+</div>
+</div>
+<!-- Sisa Kapasitas Core -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Sisa Kapasitas Core</span>
+<div class="bg-green-50 p-xs rounded">
+<span class="material-symbols-outlined text-green-600 text-[20px]" data-icon="inventory_2">inventory_2</span>
+</div>
+</div>
+<div>
+<div class="flex items-center justify-between mb-base">
+<span class="font-display-lg text-[28px] font-bold">21.5%</span>
+<span class="text-[12px] text-green-600 font-bold">Tersedia</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-green-600 h-full rounded-full" style="width: 21.5%"></div>
+</div>
+</div>
+</div>
+<!-- Tiket Terbuka -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Tiket Terbuka</span>
+<div class="bg-red-50 p-xs rounded">
+<span class="material-symbols-outlined text-error text-[20px]" data-icon="confirmation_number">confirmation_number</span>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-xs">
+<span class="font-display-lg text-[28px] font-bold text-error">42</span>
+<span class="text-[12px] text-error font-bold">+12%</span>
+</div>
+<p class="text-[10px] text-outline">Memerlukan tindakan segera</p>
+</div>
+</div>
+<!-- Insiden Bulanan -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-lg flex flex-col justify-between h-[120px]">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-outline">Insiden Bulanan</span>
+<div class="bg-amber-50 p-xs rounded">
+<span class="material-symbols-outlined text-amber-600 text-[20px]" data-icon="warning">warning</span>
+</div>
+</div>
+<div>
+<span class="font-display-lg text-[28px] font-bold">14</span>
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-amber-500"></div>
+<p class="text-[10px] text-outline">Tingkat aktivitas moderat</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Visualizations -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Kesehatan Jaringan Chart -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm">
+<div class="flex justify-between items-center mb-xl">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Kesehatan Jaringan</h3>
+<p class="text-body-sm text-on-surface-variant">Tren stabilitas throughput dan latensi 24 jam</p>
+</div>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-primary"></div>
+<span class="text-[11px] font-bold uppercase tracking-wider text-outline">Uptime %</span>
+</div>
+<select class="bg-surface-container-low border-none text-[12px] font-bold rounded py-1 pr-8 focus:ring-1 focus:ring-primary-container">
+<option>24 Jam Terakhir</option>
+<option>7 Hari Terakhir</option>
+</select>
+</div>
+</div>
+<div class="h-[280px] w-full relative">
+<!-- Mock Chart Visualization -->
+<svg class="w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 200">
+<defs>
+<linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0062ff" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#0062ff" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path class="sparkline" d="M0,150 Q50,140 100,160 T200,120 T300,130 T400,90 T500,110 T600,70 T700,80 T800,40" fill="none" stroke="#004cca" stroke-width="3"></path>
+<path d="M0,150 Q50,140 100,160 T200,120 T300,130 T400,90 T500,110 T600,70 T700,80 T800,40 V200 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Grid Lines -->
+<line stroke="#e2e8f0" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#e2e8f0" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#e2e8f0" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+</svg>
+<div class="absolute bottom-0 left-0 w-full flex justify-between px-xs text-[10px] text-outline font-mono-data mt-md">
+<span class="">00:00</span><span class="">04:00</span><span class="">08:00</span><span class="">12:00</span><span class="">16:00</span><span class="">20:00</span><span class="">23:59</span>
+</div>
+</div>
+</div>
+<!-- Live Alerts / Performance Panel -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-lg shadow-sm flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-lg">Performa Node</h3>
+<div class="space-y-md overflow-y-auto pr-sm custom-scrollbar h-[310px]">
+<div class="p-md bg-background rounded border border-outline-variant flex justify-between items-center group hover:border-primary transition-colors cursor-pointer">
+<div>
+<p class="text-body-sm font-bold">OLT_CENTRAL_01</p>
+<p class="text-[11px] text-outline font-mono-data">Beban: 82% | Suhu: 42°C</p>
+</div>
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-[10px] font-bold text-outline">STABIL</span>
+</div>
+</div>
+<div class="p-md bg-background rounded border border-outline-variant flex justify-between items-center group hover:border-primary transition-colors cursor-pointer">
+<div>
+<p class="text-body-sm font-bold">ODC_SOUTH_042</p>
+<p class="text-[11px] text-outline font-mono-data">Beban: 91% | Suhu: 58°C</p>
+</div>
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-amber-500"></div>
+<span class="text-[10px] font-bold text-outline">PERINGATAN</span>
+</div>
+</div>
+<div class="p-md bg-background rounded border border-outline-variant flex justify-between items-center group hover:border-primary transition-colors cursor-pointer">
+<div>
+<p class="text-body-sm font-bold">OLT_WEST_05</p>
+<p class="text-[11px] text-outline font-mono-data">Beban: 12% | Suhu: 38°C</p>
+</div>
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-red-500"></div>
+<span class="text-[10px] font-bold text-outline">LURING</span>
+</div>
+</div>
+<div class="p-md bg-background rounded border border-outline-variant flex justify-between items-center group hover:border-primary transition-colors cursor-pointer">
+<div>
+<p class="text-body-sm font-bold">POP_EDGE_02</p>
+<p class="text-[11px] text-outline font-mono-data">Beban: 45% | Suhu: 40°C</p>
+</div>
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-green-500"></div>
+<span class="text-[10px] font-bold text-outline">STABIL</span>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full py-sm text-primary font-bold text-body-sm border-t border-outline-variant hover:bg-surface-container transition-colors">Lihat Semua Node</button>
+</div>
+</div>
+<!-- Recent Incidents Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="p-lg flex justify-between items-center bg-surface-container-low border-b border-outline-variant">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Insiden Terbaru</h3>
+<div class="flex gap-sm">
+<span class="text-body-sm text-outline">Total Aktif: 14</span>
+<a class="text-primary font-bold text-body-sm hover:underline" href="#">Riwayat Lengkap</a>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high border-b border-outline-variant">
+<th class="px-lg py-sm font-label-caps text-outline">ID Insiden</th>
+<th class="px-lg py-sm font-label-caps text-outline">Nama Aset</th>
+<th class="px-lg py-sm font-label-caps text-outline">Kategori</th>
+<th class="px-lg py-sm font-label-caps text-outline">Prioritas</th>
+<th class="px-lg py-sm font-label-caps text-outline">Status</th>
+<th class="px-lg py-sm font-label-caps text-outline">Waktu Lapor</th>
+<th class="px-lg py-sm font-label-caps text-outline text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-sm font-mono-data text-primary font-bold">INC-2023-8942</td>
+<td class="px-lg py-sm text-body-sm font-bold text-on-surface">CABLE_ROOT_MAIN_01</td>
+<td class="px-lg py-sm text-body-sm">Kabel Putus</td>
+<td class="px-lg py-sm">
+<span class="bg-red-100 text-red-700 px-xs py-0.5 rounded font-bold text-[10px] uppercase">Kritis</span>
+</td>
+<td class="px-lg py-sm">
+<div class="flex items-center gap-xs">
+<div class="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></div>
+<span class="text-body-sm">Sedang Diproses</span>
+</div>
+</td>
+<td class="px-lg py-sm text-body-sm text-outline">12 Okt, 14:22</td>
+<td class="px-lg py-sm text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-sm font-mono-data text-primary font-bold">INC-2023-8939</td>
+<td class="px-lg py-sm text-body-sm font-bold text-on-surface">ODC_ZONE_B_12</td>
+<td class="px-lg py-sm text-body-sm">Latensi Tinggi</td>
+<td class="px-lg py-sm">
+<span class="bg-amber-100 text-amber-700 px-xs py-0.5 rounded font-bold text-[10px] uppercase">Menengah</span>
+</td>
+<td class="px-lg py-sm">
+<div class="flex items-center gap-xs">
+<div class="h-1.5 w-1.5 rounded-full bg-amber-500"></div>
+<span class="text-body-sm">Tertunda</span>
+</div>
+</td>
+<td class="px-lg py-sm text-body-sm text-outline">12 Okt, 13:05</td>
+<td class="px-lg py-sm text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group bg-slate-50/30">
+<td class="px-lg py-sm font-mono-data text-primary font-bold">INC-2023-8935</td>
+<td class="px-lg py-sm text-body-sm font-bold text-on-surface">OLT_NORTH_101</td>
+<td class="px-lg py-sm text-body-sm">Kehilangan Sinyal</td>
+<td class="px-lg py-sm">
+<span class="bg-red-100 text-red-700 px-xs py-0.5 rounded font-bold text-[10px] uppercase">Kritis</span>
+</td>
+<td class="px-lg py-sm">
+<div class="flex items-center gap-xs">
+<div class="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+<span class="text-body-sm">Selesai</span>
+</div>
+</td>
+<td class="px-lg py-sm text-body-sm text-outline">12 Okt, 10:45</td>
+<td class="px-lg py-sm text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-lg py-sm font-mono-data text-primary font-bold">INC-2023-8931</td>
+<td class="px-lg py-sm text-body-sm font-bold text-on-surface">POP_DOWNTOWN_X</td>
+<td class="px-lg py-sm text-body-sm">Fluktuasi Daya</td>
+<td class="px-lg py-sm">
+<span class="bg-blue-100 text-blue-700 px-xs py-0.5 rounded font-bold text-[10px] uppercase">Rendah</span>
+</td>
+<td class="px-lg py-sm">
+<div class="flex items-center gap-xs">
+<div class="h-1.5 w-1.5 rounded-full bg-green-500"></div>
+<span class="text-body-sm">Selesai</span>
+</div>
+</td>
+<td class="px-lg py-sm text-body-sm text-outline">12 Okt, 09:12</td>
+<td class="px-lg py-sm text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Footer / Status Bar -->
+<footer class="h-8 bg-surface-container-highest flex items-center px-lg border-t border-outline-variant justify-between">
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs">
+<div class="h-2 w-2 rounded-full bg-green-500"></div>
+<span class="text-[10px] font-bold text-outline">SISTEM NOMINAL</span>
+</div>
+<div class="h-3 w-px bg-outline mx-xs"></div>
+<span class="text-[10px] text-outline uppercase font-mono-data">LATENSI API: 24ms</span>
+</div>
+<p class="text-[10px] text-outline">© 2023 Hinet Fiber Infrastructure Management. v2.4.1-stable</p>
+</footer>
+</main>
+<script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('nav li').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('nav li').forEach(i => {
+                    i.classList.remove('border-l-[3px]', 'border-primary-container', 'bg-on-tertiary-fixed-variant', 'text-on-tertiary-container', 'font-bold');
+                    i.classList.add('text-tertiary-fixed-dim', 'hover:text-on-tertiary', 'hover:bg-on-tertiary-fixed-variant', 'border-transparent');
+                });
+                this.classList.remove('text-tertiary-fixed-dim', 'hover:text-on-tertiary', 'hover:bg-on-tertiary-fixed-variant', 'border-transparent');
+                this.classList.add('border-l-[3px]', 'border-primary-container', 'bg-on-tertiary-fixed-variant', 'text-on-tertiary-container', 'font-bold');
+            });
+        });
+    </script>
+
+
+</body></html>

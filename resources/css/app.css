@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none !important;
+}
+
+@layer components {
+    .technical-pattern {
+        background-image: radial-gradient(circle at 2px 2px, #c2c6d9 1px, transparent 0);
+        background-size: 32px 32px;
+        opacity: 0.15;
+    }
+
+    .left-border-trace:focus-within {
+        border-left: 3px solid #004cca;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #c2c6d9;
+        border-radius: 10px;
+    }
+
+    .path-trace-node::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: -24px;
+        width: 24px;
+        height: 2px;
+        background: #c2c6d9;
+        transform: translateY(-50%);
+    }
+
+    .path-trace-node:last-child::after {
+        display: none;
+    }
+}

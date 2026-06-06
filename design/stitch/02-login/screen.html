@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3133",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#0062ff",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#131b2e",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#48586d",
+                        "surface-container-high": "#e6e8ea",
+                        "on-surface-variant": "#424656",
+                        "primary": "#004cca",
+                        "on-error-container": "#93000a",
+                        "secondary": "#565e74",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "tertiary-container": "#607087",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#eef3ff",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "outline-variant": "#c2c6d9",
+                        "secondary-container": "#dae2fd",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-primary-container": "#f3f3ff",
+                        "on-primary-fixed": "#00174b",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "surface": "#f7f9fb",
+                        "outline": "#737687",
+                        "surface-tint": "#0053da",
+                        "surface-container": "#eceef0",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-on-surface": "#eff1f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container_max": "1600px",
+                        "gutter": "20px",
+                        "xs": "4px",
+                        "sidebar_width": "260px",
+                        "sm": "8px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "xl": "32px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "mono-data": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .technical-pattern {
+            background-image: radial-gradient(circle at 2px 2px, #c2c6d9 1px, transparent 0);
+            background-size: 32px 32px;
+            opacity: 0.15;
+        }
+        .left-border-trace:focus-within {
+            border-left: 3px solid #004cca;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Background Elements -->
+<div class="absolute inset-0 technical-pattern z-0"></div>
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary opacity-5 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary opacity-5 blur-[120px] rounded-full"></div>
+<!-- Main Content Shell -->
+<main class="relative z-10 w-full max-w-[420px] px-lg">
+<!-- Brand Identity -->
+<div class="flex flex-col items-center mb-xl">
+<div class="mb-md flex items-center justify-center bg-primary-container p-sm rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-on-primary-container !text-[32px]" style="font-variation-settings: 'FILL' 1;">router</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">Hinet Fiber</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-xs">Enterprise Management System</p>
+</div>
+<!-- Login Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-xl shadow-sm">
+<form action="#" class="space-y-lg" method="POST">
+<!-- Username Field -->
+<div class="space-y-xs group">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="username">Username / Email</label>
+<div class="relative left-border-trace transition-all">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[18px]">person</span>
+</div>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-[10px] pl-[44px] pr-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all placeholder:text-outline" id="username" name="username" placeholder="user@hinet.net.id" required="" type="text">
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-xs group">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="password">Password</label>
+<a class="font-body-sm text-body-sm text-primary hover:underline transition-all" href="#">Forgot Password?</a>
+</div>
+<div class="relative left-border-trace transition-all">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[18px]">lock</span>
+</div>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-[10px] pl-[44px] pr-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all placeholder:text-outline" id="password" name="password" placeholder="••••••••" required="" type="password">
+<button class="absolute inset-y-0 right-0 pr-md flex items-center text-outline hover:text-on-surface transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me & State -->
+<div class="flex items-center">
+<input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer" id="remember" name="remember" type="checkbox">
+<label class="ml-sm font-body-sm text-body-sm text-on-surface-variant select-none cursor-pointer" for="remember">Keep me logged in for 30 days</label>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary font-body-md font-bold py-[12px] rounded-lg shadow-sm hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all flex items-center justify-center gap-sm" type="submit">
+<span>Masuk ke Sistem</span>
+<span class="material-symbols-outlined text-[18px]">login</span>
+</button>
+</form>
+<!-- Secondary Info -->
+<div class="mt-lg pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<p class="font-body-sm text-body-sm">Authorized personnel only. Sessions are monitored for security auditing purposes.</p>
+</div>
+</div>
+</section>
+<!-- Aesthetic Imagery Component -->
+<div class="mt-xl grid grid-cols-1 overflow-hidden rounded-xl border border-outline-variant bg-surface-container shadow-sm h-[140px] relative">
+<img class="w-full h-full object-cover grayscale opacity-40 mix-blend-multiply" data-alt="A professional close-up of a high-tech server room rack with glowing blue and green fiber optic indicators and neatly organized cabling. The scene is captured with shallow depth of field, emphasizing the precision and technical scale of a modern fiber infrastructure. The lighting is cool and sophisticated, reflecting an enterprise-grade network management environment with a clean, corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoflk25C3rKkLskINlmAd1dB4DCjU8t4Z8f2i6ikfnJcrpnL1DL9mY0685Z7YLHRL1DpyoUuN8xGhUhl29DOVakWO5kSkT2ndIt1eSErqGWRUl7BXTrnX9YrH2XJJPHct9mUhh4t5GOq9Kmd4wramtQ0CusY5lVR1ZXL9i1q29p3gU4F738zUTGB8UCZM3Ysgy1dWGkH1Jvw6Q2dKvtRf9V5suNillSx0GUKOEUMzCDJHPoDIcTrlKU0XNgVT8TmtApnIr0GA9Qds8">
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent flex flex-col justify-end p-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-success animate-pulse" style="background-color: #22c55e;"></span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Backbone Status: Optimal</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Language Toggle -->
+<footer class="mt-xl relative z-10 w-full flex justify-center pb-xl">
+<div class="flex items-center gap-md bg-surface-container-low px-md py-xs rounded-full border border-outline-variant shadow-sm">
+<button class="flex items-center gap-xs font-body-sm text-body-sm text-primary font-bold">
+<span class="material-symbols-outlined text-[16px]">language</span>
+<span>Bahasa Indonesia</span>
+</button>
+<div class="w-[1px] h-3 bg-outline-variant"></div>
+<button class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors">
+                English
+            </button>
+</div>
+</footer>
+<script>
+        // Micro-interaction for password toggle
+        const toggleBtn = document.querySelector('button[type="button"]');
+        const passInput = document.querySelector('#password');
+        const toggleIcon = toggleBtn.querySelector('.material-symbols-outlined');
+
+        toggleBtn.addEventListener('click', () => {
+            const type = passInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passInput.setAttribute('type', type);
+            toggleIcon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+        });
+
+        // Form submission animation (visual only)
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Authenticating...</span>
+            `;
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                alert('Authentication system simulation. Navigation would proceed to Dashboard.');
+            }, 1500);
+        });
+    </script>
+</body></html>

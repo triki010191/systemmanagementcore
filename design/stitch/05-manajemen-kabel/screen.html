@@ -1,0 +1,537 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Hinet Fiber - Cable Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#0b1c30",
+                    "outline": "#737687",
+                    "on-background": "#191c1e",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "secondary-fixed": "#dae2fd",
+                    "surface-dim": "#d8dadc",
+                    "surface-container": "#eceef0",
+                    "surface-tint": "#0053da",
+                    "tertiary-fixed": "#d3e4fe",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c2c6d9",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "inverse-surface": "#2d3133",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#5c647a",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#eef3ff",
+                    "on-primary": "#ffffff",
+                    "secondary": "#565e74",
+                    "inverse-primary": "#b4c5ff",
+                    "on-primary-fixed": "#00174b",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-container": "#dae2fd",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary": "#48586d",
+                    "surface-variant": "#e0e3e5",
+                    "primary-fixed": "#dbe1ff",
+                    "primary-container": "#0062ff",
+                    "on-surface": "#191c1e",
+                    "tertiary-container": "#607087",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "primary": "#004cca",
+                    "background": "#f7f9fb",
+                    "on-primary-container": "#f3f3ff",
+                    "surface-bright": "#f7f9fb",
+                    "on-surface-variant": "#424656",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface": "#f7f9fb",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f2f4f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "container_max": "1600px",
+                    "sm": "8px",
+                    "base": "4px",
+                    "xs": "4px",
+                    "sidebar_width": "260px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "headline-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "mono-data": ["JetBrains Mono"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "display-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .fiber-core-spare {
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.4) 2px, rgba(255,255,255,0.4) 4px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0b1c30;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #38485d;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- Side Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-[260px] overflow-y-auto bg-on-tertiary-fixed border-r border-outline-variant z-50 custom-scrollbar">
+<div class="p-lg">
+<h1 class="font-headline-sm text-headline-sm font-bold text-surface-container-lowest">Hinet Fiber</h1>
+<p class="font-body-sm text-body-sm text-tertiary-fixed-dim opacity-70">Manajemen Perusahaan</p>
+</div>
+<nav class="mt-md">
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-body-md text-body-md">Peta Jaringan</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm border-l-[3px] border-primary-container bg-on-tertiary-fixed-variant text-on-tertiary-container font-bold transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-body-md text-body-md">Cable Management</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+<span class="font-body-md text-body-md">POP / OLT</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+<span class="font-body-md text-body-md">Manajemen ODP</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-body-md text-body-md">Tiket Gangguan</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Analisis OTDR</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-body-md text-body-md">Laporan</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-tertiary-fixed-dim hover:text-on-tertiary hover:bg-on-tertiary-fixed-variant transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Pengaturan</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="ml-[260px] flex flex-col min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="flex justify-between items-center h-16 px-lg sticky top-0 z-40 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Sistem Manajemen Fiber</h2>
+<div class="h-6 w-[1px] bg-outline-variant mx-sm"></div>
+<div class="flex items-center bg-surface-container px-sm py-xs rounded">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 font-body-sm text-body-sm w-48" placeholder="Cari ID Fiber..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all" data-icon="help">help</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-outline-variant border border-outline">
+<img alt="Foto profil profesional" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD302lEX1QfVtgSnhTORMvVoW0GDFemC7wvbUe_sMuLzCi91ufmESWOL728_lWmj0eH-_LzuNcFacJwKNnADertHnDqGlFc54vRT6slu6J1BzGNsTbt_4iUFYDz6FhXFCQcu3Q1GVRg45qnRe3hWd5hDGXD10ZB755ADSexZhP8kehhXicWe1Jvy2Y3LzgCFq7yFe8strboQJkQoMXbrZJ2OW0MXtCvgMHvsNA1BCROTFPYZ49omGTz9XI16xbpFJoRyBaoVhCl6rJQ">
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="p-lg flex-grow max-w-[1600px]"><div class="flex items-center gap-sm mb-md font-label-caps text-label-caps">
+  <div class="flex items-center gap-xs text-outline opacity-60">
+    <span class="material-symbols-outlined text-[16px]" data-icon="route">route</span>
+    <span class="">Penelusuran Jalur Fiber</span>
+  </div>
+  <span class="material-symbols-outlined text-outline-variant text-[14px]" data-icon="arrow_forward_ios">arrow_forward_ios</span>
+  <div class="flex items-center gap-xs text-primary">
+    <span class="material-symbols-outlined text-[16px]" data-icon="settings_input_component">settings_input_component</span>
+    <span class="border-b-2 border-primary">Manajemen Kabel</span>
+  </div>
+</div>
+<!-- Breadcrumbs & Actions -->
+<div class="flex justify-between items-end mb-lg">
+<div>
+<div class="flex items-center gap-xs text-on-surface-variant font-body-sm mb-xs">
+<span class="">Inventaris</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="">Kabel</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-bold">CBL-96-WEST-TRUNK-01</span>
+</div>
+<h3 class="font-display-lg text-display-lg text-on-surface">Detail Infrastruktur Kabel</h3>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-sm border border-outline-variant text-on-surface font-bold rounded-lg hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined" data-icon="print">print</span> Ekspor Skema
+                    </button>
+<button class="flex items-center gap-xs px-md py-sm bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined" data-icon="add">add</span> Catatan Sambungan Baru
+                    </button>
+</div>
+</div>
+<!-- Stats Overview Cards -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-lg">
+<div class="bg-surface-container-lowest p-md border border-outline-variant rounded-xl shadow-sm">
+<p class="font-label-caps text-label-caps text-outline mb-xs">TOTAL JUMLAH FIBER</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-headline-md text-headline-md text-on-surface">96</span>
+<span class="text-on-surface-variant font-body-sm">Core</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md border border-outline-variant rounded-xl shadow-sm">
+<p class="font-label-caps text-label-caps text-outline mb-xs">KONEKSI AKTIF</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-headline-md text-headline-md text-primary">64</span>
+<span class="text-on-surface-variant font-body-sm">(66.7%)</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md border border-outline-variant rounded-xl shadow-sm">
+<p class="font-label-caps text-label-caps text-outline mb-xs">KAPASITAS TERSISA</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-headline-md text-headline-md text-secondary">32</span>
+<span class="text-on-surface-variant font-body-sm">Core</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md border border-outline-variant rounded-xl shadow-sm">
+<p class="font-label-caps text-label-caps text-outline mb-xs">STATUS SISTEM</p>
+<div class="flex items-center gap-sm mt-xs">
+<span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+<span class="font-headline-sm text-headline-sm text-on-surface">OPTIMAL</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Tube Visualization - Bento Large -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex justify-between items-center mb-lg">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Distribusi Core Fisik</h4>
+<div class="flex gap-md font-body-sm">
+<div class="flex items-center gap-xs"><span class="w-3 h-3 rounded-sm bg-primary"></span> Terpakai</div>
+<div class="flex items-center gap-xs"><span class="w-3 h-3 rounded-sm bg-surface-container-highest border border-outline-variant fiber-core-spare"></span> Sisa</div>
+</div>
+</div>
+<!-- Tube Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Tube 1: Blue -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-[#004cca] px-md py-xs flex justify-between items-center">
+<span class="font-label-caps text-on-primary">TUBE 01 - BLUE</span>
+<span class="text-on-primary font-mono-data text-[11px]">12 CORE</span>
+</div>
+<div class="p-md grid grid-cols-6 gap-sm bg-surface-container-low">
+<!-- Fiber Cores -->
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-blue-600 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">01</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-orange-500 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">02</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-green-500 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">03</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-amber-800 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">04</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-slate-400 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">05</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1 opacity-60">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-dashed border-outline shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">06</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-red-600 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">07</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1 opacity-60">
+<div class="w-8 h-8 rounded-full bg-zinc-900 border-2 border-dashed border-outline shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">08</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-violet-600 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">09</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1">
+<div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-primary-container shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">10</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1 opacity-60">
+<div class="w-8 h-8 rounded-full bg-cyan-400 border-2 border-dashed border-outline shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">11</span>
+</div>
+<div class="group relative flex flex-col items-center gap-1 opacity-60">
+<div class="w-8 h-8 rounded-full bg-emerald-300 border-2 border-dashed border-outline shadow-inner cursor-pointer hover:scale-110 transition-transform"></div>
+<span class="font-mono-data text-[10px]">12</span>
+</div>
+</div>
+</div>
+<!-- Tube 2: Orange -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-[#f97316] px-md py-xs flex justify-between items-center">
+<span class="font-label-caps text-on-primary">TUBE 02 - ORANGE</span>
+<span class="text-on-primary font-mono-data text-[11px]">12 CORE</span>
+</div>
+<div class="p-md grid grid-cols-6 gap-sm bg-surface-container-low">
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-blue-600 border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">13</span></div>
+<div class="group relative flex flex-col items-center gap-1 opacity-40"><div class="w-8 h-8 rounded-full bg-orange-400 border-2 border-dashed border-outline cursor-pointer"></div><span class="font-mono-data text-[10px]">14</span></div>
+<div class="group relative flex flex-col items-center gap-1 opacity-40"><div class="w-8 h-8 rounded-full bg-green-400 border-2 border-dashed border-outline cursor-pointer"></div><span class="font-mono-data text-[10px]">15</span></div>
+<div class="group relative flex flex-col items-center gap-1 opacity-40"><div class="w-8 h-8 rounded-full bg-amber-400 border-2 border-dashed border-outline cursor-pointer"></div><span class="font-mono-data text-[10px]">16</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-slate-500 border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">17</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-white border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">18</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-red-600 border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">19</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-black border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">20</span></div>
+<div class="group relative flex flex-col items-center gap-1 opacity-40"><div class="w-8 h-8 rounded-full bg-violet-400 border-2 border-dashed border-outline cursor-pointer"></div><span class="font-mono-data text-[10px]">21</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">22</span></div>
+<div class="group relative flex flex-col items-center gap-1"><div class="w-8 h-8 rounded-full bg-cyan-400 border-2 border-primary-container cursor-pointer"></div><span class="font-mono-data text-[10px]">23</span></div>
+<div class="group relative flex flex-col items-center gap-1 opacity-40"><div class="w-8 h-8 rounded-full bg-emerald-400 border-2 border-dashed border-outline cursor-pointer"></div><span class="font-mono-data text-[10px]">24</span></div>
+</div>
+</div>
+<!-- Tube 3: Green -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-[#22c55e] px-md py-xs flex justify-between items-center">
+<span class="font-label-caps text-on-primary">TUBE 03 - GREEN</span>
+<span class="text-on-primary font-mono-data text-[11px]">12 CORE</span>
+</div>
+<div class="p-md bg-surface-container-low flex items-center justify-center h-24 italic text-on-surface-variant font-body-sm">
+                                Lihat tube lainnya...
+                            </div>
+</div>
+<!-- Tube 4: Brown -->
+<div class="border border-outline-variant rounded-lg overflow-hidden">
+<div class="bg-[#78350f] px-md py-xs flex justify-between items-center">
+<span class="font-label-caps text-on-primary">TUBE 04 - BROWN</span>
+<span class="text-on-primary font-mono-data text-[11px]">12 CORE</span>
+</div>
+<div class="p-md bg-surface-container-low flex items-center justify-center h-24 italic text-on-surface-variant font-body-sm">
+                                Lihat tube lainnya...
+                            </div>
+</div>
+</div>
+<div class="mt-lg pt-lg border-t border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Klik pada core untuk melihat detail level cahaya, log atenuasi, dan data terminasi endpoint.</p>
+</div>
+</div>
+</div>
+<!-- Cable Specs & Side Panels - Bento Right -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Cable Specs -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-md">Spesifikasi Kabel</h4>
+<div class="space-y-sm">
+<div class="flex justify-between py-xs border-b border-surface-container">
+<span class="font-label-caps text-outline">PRODUSEN</span>
+<span class="font-mono-data text-on-surface">Corning OptiSheath</span>
+</div>
+<div class="flex justify-between py-xs border-b border-surface-container">
+<span class="font-label-caps text-outline">TIPE FIBER</span>
+<span class="font-mono-data text-on-surface">G.652.D (SMF)</span>
+</div>
+<div class="flex justify-between py-xs border-b border-surface-container">
+<span class="font-label-caps text-outline">RATING JAKET</span>
+<span class="font-mono-data text-on-surface">LSZH / Plenum</span>
+</div>
+<div class="flex justify-between py-xs border-b border-surface-container">
+<span class="font-label-caps text-outline">TANGGAL INSTALASI</span>
+<span class="font-mono-data text-on-surface">2023-11-14</span>
+</div>
+<div class="flex justify-between py-xs">
+<span class="font-label-caps text-outline">TOTAL PANJANG</span>
+<span class="font-mono-data text-on-surface">4.28 KM</span>
+</div>
+</div>
+</div>
+<!-- Splice Records Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex-grow">
+<div class="flex justify-between items-center mb-md">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Catatan Sambungan</h4>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-all" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="space-y-md">
+<div class="p-sm bg-surface-container rounded border-l-4 border-green-500">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface text-body-sm">Splice Case #SC-104</span>
+<span class="text-[10px] bg-green-100 text-green-700 px-1 rounded">STABIL</span>
+</div>
+<p class="text-[12px] text-on-surface-variant leading-tight">Hubungan silang ke feeder District-B. Rugi: 0.02dB. Sambungan fusi selesai.</p>
+</div>
+<div class="p-sm bg-surface-container rounded border-l-4 border-amber-500">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface text-body-sm">Splice Case #SC-109</span>
+<span class="text-[10px] bg-amber-100 text-amber-700 px-1 rounded">PERINGATAN</span>
+</div>
+<p class="text-[12px] text-on-surface-variant leading-tight">Micro-bend terdeteksi pada pintu masuk penutup. Atenuasi tinggi pada Core 14.</p>
+</div>
+<div class="p-sm bg-surface-container rounded border-l-4 border-blue-500">
+<div class="flex justify-between mb-1">
+<span class="font-bold text-on-surface text-body-sm">Manhole MH-42</span>
+<span class="text-[10px] bg-blue-100 text-blue-700 px-1 rounded">DIPLANAKAN</span>
+</div>
+<p class="text-[12px] text-on-surface-variant leading-tight">Pengalihan rute terjadwal untuk perluasan kota. ETA: Q3 2024.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Inventory Table -->
+<div class="mt-lg bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Matriks Endpoint &amp; Log Penelusuran</h4>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span> Filter
+                        </div>
+<div class="h-4 w-[1px] bg-outline-variant"></div>
+<div class="flex items-center gap-xs font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span> CSV
+                        </div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm">
+<thead class="bg-surface-container-highest sticky top-0">
+<tr class="text-on-surface-variant border-b border-outline-variant">
+<th class="px-lg py-sm font-label-caps">CORE ID</th>
+<th class="px-lg py-sm font-label-caps">TUBE</th>
+<th class="px-lg py-sm font-label-caps">STATUS</th>
+<th class="px-lg py-sm font-label-caps">A-END (SUMBER)</th>
+<th class="px-lg py-sm font-label-caps">Z-END (TUJUAN)</th>
+<th class="px-lg py-sm font-label-caps">RUGI (dB)</th>
+<th class="px-lg py-sm font-label-caps text-right">AKSI</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<tr class="hover:bg-slate-50 transition-colors h-[40px]">
+<td class="px-lg py-xs font-mono-data">C01-01</td>
+<td class="px-lg py-xs flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Blue</td>
+<td class="px-lg py-xs"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold text-[10px]">AKTIF</span></td>
+<td class="px-lg py-xs font-mono-data">POP-WEST-01:P1</td>
+<td class="px-lg py-xs font-mono-data">ODP-422:U1</td>
+<td class="px-lg py-xs font-mono-data text-green-600">0.18</td>
+<td class="px-lg py-xs text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors h-[40px]">
+<td class="px-lg py-xs font-mono-data">C01-02</td>
+<td class="px-lg py-xs flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Blue</td>
+<td class="px-lg py-xs"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-bold text-[10px]">AKTIF</span></td>
+<td class="px-lg py-xs font-mono-data">POP-WEST-01:P2</td>
+<td class="px-lg py-xs font-mono-data">ODP-422:U2</td>
+<td class="px-lg py-xs font-mono-data text-green-600">0.21</td>
+<td class="px-lg py-xs text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors h-[40px]">
+<td class="px-lg py-xs font-mono-data">C01-03</td>
+<td class="px-lg py-xs flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Blue</td>
+<td class="px-lg py-xs"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold text-[10px]">RESERVASI</span></td>
+<td class="px-lg py-xs font-mono-data">--</td>
+<td class="px-lg py-xs font-mono-data">--</td>
+<td class="px-lg py-xs font-mono-data text-on-surface-variant">N/A</td>
+<td class="px-lg py-xs text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="bg-slate-50 hover:bg-slate-100 transition-colors h-[40px]">
+<td class="px-lg py-xs font-mono-data">C01-04</td>
+<td class="px-lg py-xs flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-blue-600"></span> Blue</td>
+<td class="px-lg py-xs"><span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-bold text-[10px]">SISA</span></td>
+<td class="px-lg py-xs font-mono-data">--</td>
+<td class="px-lg py-xs font-mono-data">--</td>
+<td class="px-lg py-xs font-mono-data text-on-surface-variant">N/A</td>
+<td class="px-lg py-xs text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors h-[40px]">
+<td class="px-lg py-xs font-mono-data">C01-14</td>
+<td class="px-lg py-xs flex items-center gap-xs"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Orange</td>
+<td class="px-lg py-xs"><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-bold text-[10px]">GANGGUAN</span></td>
+<td class="px-lg py-xs font-mono-data">POP-WEST-01:P14</td>
+<td class="px-lg py-xs font-mono-data">ODP-425:U1</td>
+<td class="px-lg py-xs font-mono-data text-error font-bold">12.4</td>
+<td class="px-lg py-xs text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-all" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-lg py-sm bg-surface-container-low border-t border-outline-variant flex justify-center">
+<button class="text-primary font-bold hover:underline">Muat Seluruh 96 Core</button>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interaction for core hover -->
+<script>
+        document.querySelectorAll('.cursor-pointer').forEach(el => {
+            el.addEventListener('mouseenter', function() {
+                this.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+            });
+            el.addEventListener('mouseleave', function() {
+                this.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
+            });
+        });
+    </script>
+
+
+</body></html>
