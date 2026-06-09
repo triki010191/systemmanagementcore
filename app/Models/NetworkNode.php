@@ -85,11 +85,6 @@ class NetworkNode extends Model
         return $this->hasOne(Odp::class);
     }
 
-    public function splitter(): HasOne
-    {
-        return $this->hasOne(Splitter::class);
-    }
-
     public function customer(): HasOne
     {
         return $this->hasOne(Customer::class);
@@ -123,10 +118,5 @@ class NetworkNode extends Model
     public function cablesEnded(): HasMany
     {
         return $this->hasMany(FiberCable::class, 'end_node_id');
-    }
-
-    public function isSplitter(): bool
-    {
-        return $this->type === NetworkNodeType::Splitter;
     }
 }

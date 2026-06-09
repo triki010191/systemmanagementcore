@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             TubeColorSeeder::class,
             CmsSeeder::class,
             UserSampleSeeder::class,
-            NetworkDemoSeeder::class,
         ]);
     }
 }

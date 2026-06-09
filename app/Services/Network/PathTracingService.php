@@ -5,6 +5,7 @@ namespace App\Services\Network;
 use App\DTO\PathTraceResult;
 use App\Enums\NetworkNodeType;
 use App\Models\Customer;
+use App\Models\NetworkNode;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -16,7 +17,6 @@ class PathTracingService
         NetworkNodeType::Olt,
         NetworkNodeType::Otb,
         NetworkNodeType::Odc,
-        NetworkNodeType::Splitter,
         NetworkNodeType::Odp,
         NetworkNodeType::Customer,
     ];
@@ -28,7 +28,6 @@ class PathTracingService
                 'networkNode',
                 'connection.odp.networkNode',
                 'connection.cableCore',
-                'connection.splitterPort.splitter.networkNode',
             ])
             ->findOrFail($id);
 
@@ -42,7 +41,6 @@ class PathTracingService
                 'networkNode',
                 'connection.odp.networkNode',
                 'connection.cableCore',
-                'connection.splitterPort.splitter.networkNode',
             ])
             ->where('code', $code)
             ->firstOrFail();
@@ -79,15 +77,6 @@ class PathTracingService
                 ]);
             } else {
                 $missing[] = 'odp';
-            }
-
-            if ($connection->splitterPort) {
-                $splitterNode = $connection->splitterPort->splitter?->networkNode;
-                if ($splitterNode) {
-                    $hops[] = $this->nodeHop($splitterNode, null, [
-                        'port' => $connection->splitterPort->label ?? "OUT-{$connection->splitterPort->port_number}",
-                    ]);
-                }
             }
 
             if ($connection->cableCore) {
@@ -136,7 +125,7 @@ class PathTracingService
     /**
      * @return list<array<string, mixed>>
      */
-    private function traverseUpstream(\App\Models\NetworkNode $startNode): array
+    private function traverseUpstream(NetworkNode $startNode): array
     {
         $hops = [];
         $current = $startNode->parent;
@@ -154,7 +143,7 @@ class PathTracingService
      * @return array<string, mixed>
      */
     private function nodeHop(
-        \App\Models\NetworkNode $node,
+        NetworkNode $node,
         ?Customer $customer = null,
         array $extra = [],
     ): array {

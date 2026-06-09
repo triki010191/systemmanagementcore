@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Network;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateCustomerConnectionRequest extends FormRequest
 {
@@ -20,7 +19,6 @@ class UpdateCustomerConnectionRequest extends FormRequest
         return [
             'odp_id' => ['required', 'exists:odps,id'],
             'odp_port_number' => ['required', 'integer', 'min:1', 'max:255'],
-            'splitter_port_id' => ['nullable', 'exists:splitter_ports,id'],
             'cable_core_id' => ['nullable', 'exists:fiber_cores,id'],
             'drop_length_m' => ['nullable', 'numeric', 'min:0', 'max:9999'],
             'connected_at' => ['nullable', 'date'],

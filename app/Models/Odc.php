@@ -15,6 +15,8 @@ class Odc extends Model
         'port_capacity',
         'port_used',
         'split_ratio_default',
+        'cores_from_otb',
+        'cores_to_odp',
     ];
 
     protected function casts(): array
@@ -22,6 +24,8 @@ class Odc extends Model
         return [
             'port_capacity' => 'integer',
             'port_used' => 'integer',
+            'cores_from_otb' => 'integer',
+            'cores_to_odp' => 'integer',
         ];
     }
 
@@ -42,6 +46,6 @@ class Odc extends Model
 
     public function splitters(): HasMany
     {
-        return $this->hasMany(Splitter::class);
+        return $this->hasMany(OdcSplitter::class)->orderBy('sort_order');
     }
 }

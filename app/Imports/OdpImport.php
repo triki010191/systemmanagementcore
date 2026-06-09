@@ -33,14 +33,14 @@ class OdpImport implements ToCollection, WithHeadingRow
                     continue;
                 }
 
-                $parentCode = trim((string) ($row['parent_splitter_code'] ?? ''));
+                $parentCode = trim((string) ($row['parent_odc_code'] ?? $row['parent_splitter_code'] ?? ''));
                 if ($parentCode === '') {
                     throw new RuntimeException(__('hfnms.import_parent_required'));
                 }
 
                 $parent = NetworkNode::query()
                     ->where('code', $parentCode)
-                    ->where('type', NetworkNodeType::Splitter)
+                    ->where('type', NetworkNodeType::Odc)
                     ->first();
 
                 if (! $parent) {
@@ -62,6 +62,7 @@ class OdpImport implements ToCollection, WithHeadingRow
                     'status' => 'active',
                     'port_capacity' => (int) ($row['port_capacity'] ?? 16),
                     'port_used' => 0,
+                    'cores_from_odc' => (int) ($row['cores_from_odc'] ?? 0),
                 ]);
 
                 $this->imported++;
@@ -74,6 +75,6 @@ class OdpImport implements ToCollection, WithHeadingRow
     private function isEmptyRow(Collection $row): bool
     {
         return trim((string) ($row['name'] ?? '')) === ''
-            && trim((string) ($row['parent_splitter_code'] ?? '')) === '';
+            && trim((string) ($row['parent_odc_code'] ?? $row['parent_splitter_code'] ?? '')) === '';
     }
 }

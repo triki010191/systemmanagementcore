@@ -1,21 +1,23 @@
 <?php
 
 use App\Enums\NetworkNodeType;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Network\AssetController;
 use App\Http\Controllers\Network\AssetPhotoController;
 use App\Http\Controllers\Network\AssetQrController;
 use App\Http\Controllers\Network\BulkImportController;
 use App\Http\Controllers\Network\CableController;
+use App\Http\Controllers\Network\CoreJointController;
 use App\Http\Controllers\Network\CoreManagementController;
 use App\Http\Controllers\Network\CustomerConnectionController;
 use App\Http\Controllers\Network\GisMapController;
 use App\Http\Controllers\Network\ImpactAnalysisController;
 use App\Http\Controllers\Network\MaintenanceScheduleController;
+use App\Http\Controllers\Network\OdcDistributionController;
 use App\Http\Controllers\Network\OtdrRecordController;
 use App\Http\Controllers\Network\PathTracingController;
 use App\Http\Controllers\Network\ScanController;
@@ -114,7 +116,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{id}/read', [NotificationController::class, 'markRead'])->name('read');
     });
 
-    Route::middleware('can:gis-map.view')->get('/gis', [GisMapController::class, 'index'])->name('gis.index');
+    Route::middleware('can:gis-map.view')->group(function () {
+        Route::get('/gis', [GisMapController::class, 'index'])->name('gis.index');
+        Route::get('/gis/route', [GisMapController::class, 'route'])->name('gis.route');
+    });
 
     Route::prefix('customer-connections')->name('customer-connections.')->group(function () {
         Route::middleware('can:customer.view')->group(function () {
@@ -133,11 +138,32 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('can:cable.manage')->prefix('cables')->name('cables.')->group(function () {
         Route::get('/', [CableController::class, 'index'])->name('index');
+        Route::get('/create', [CableController::class, 'create'])->name('create');
+        Route::post('/', [CableController::class, 'store'])->name('store');
+        Route::get('/{cable}/edit', [CableController::class, 'edit'])->name('edit');
+        Route::put('/{cable}', [CableController::class, 'update'])->name('update');
+        Route::post('/{cable}/activate', [CableController::class, 'activate'])->name('activate');
+        Route::delete('/{cable}', [CableController::class, 'destroy'])->name('destroy');
         Route::post('/{cable}/qr', [AssetQrController::class, 'generateCable'])->name('qr.generate');
         Route::get('/{cable}', [CableController::class, 'show'])->name('show');
     });
 
-    Route::middleware('can:core.manage')->get('/cores', [CoreManagementController::class, 'index'])->name('cores.index');
+    Route::middleware('can:cable.manage')->prefix('core-joints')->name('core-joints.')->group(function () {
+        Route::get('/', [CoreJointController::class, 'index'])->name('index');
+        Route::get('/create', [CoreJointController::class, 'create'])->name('create');
+        Route::get('/options', [CoreJointController::class, 'options'])->name('options');
+        Route::post('/', [CoreJointController::class, 'store'])->name('store');
+        Route::get('/{coreJoint}/edit', [CoreJointController::class, 'edit'])->name('edit');
+        Route::put('/{coreJoint}', [CoreJointController::class, 'update'])->name('update');
+        Route::delete('/{coreJoint}', [CoreJointController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::middleware('can:core.manage')->prefix('cores')->name('cores.')->group(function () {
+        Route::get('/', [CoreManagementController::class, 'index'])->name('index');
+        Route::get('/{core}/edit', [CoreManagementController::class, 'edit'])->name('edit')->whereNumber('core');
+        Route::put('/{core}', [CoreManagementController::class, 'update'])->name('update')->whereNumber('core');
+        Route::delete('/{core}', [CoreManagementController::class, 'destroy'])->name('destroy')->whereNumber('core');
+    });
 
     Route::middleware('can:network.create')->prefix('bulk-import')->name('bulk-import.')->group(function () {
         Route::get('/', [BulkImportController::class, 'index'])->name('index');
@@ -161,10 +187,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('can:network.edit')->group(function () use ($assetTypes) {
             Route::get('{type}/{asset}/edit', [AssetController::class, 'edit'])->name('assets.edit')->where('type', $assetTypes)->whereNumber('asset');
             Route::put('{type}/{asset}', [AssetController::class, 'update'])->name('assets.update')->where('type', $assetTypes)->whereNumber('asset');
+            Route::delete('{type}/{asset}', [AssetController::class, 'destroy'])->name('assets.destroy')->where('type', $assetTypes)->whereNumber('asset');
             Route::post('{type}/{asset}/qr', [AssetQrController::class, 'generateNode'])->name('assets.qr.generate')->where('type', $assetTypes)->whereNumber('asset');
             Route::post('{type}/{asset}/photos', [AssetPhotoController::class, 'store'])->name('assets.photos.store')->where('type', $assetTypes)->whereNumber('asset');
+            Route::get('odc/{odc}/distribution/options', [OdcDistributionController::class, 'options'])->name('odc.distribution.options')->whereNumber('odc');
+            Route::put('odc/{odc}/distribution', [OdcDistributionController::class, 'update'])->name('odc.distribution.update')->whereNumber('odc');
         });
-        Route::middleware('can:network.delete')->delete('{type}/{asset}', [AssetController::class, 'destroy'])->name('assets.destroy')->where('type', $assetTypes)->whereNumber('asset');
     });
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

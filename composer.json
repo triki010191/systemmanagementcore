@@ -48,6 +48,15 @@
             "npm install --ignore-scripts",
             "npm run build"
         ],
+        "deploy": [
+            "composer install --no-dev --optimize-autoloader",
+            "@php artisan migrate --force",
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan view:cache",
+            "npm ci --ignore-scripts",
+            "npm run build"
+        ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74,#86efac\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"php artisan reverb:start\" \"npm run dev\" --names=server,queue,logs,reverb,vite --kill-others"

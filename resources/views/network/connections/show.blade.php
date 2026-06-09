@@ -51,7 +51,6 @@
                 <dl class="space-y-sm text-body-sm">
                     <div class="flex justify-between"><dt class="text-on-surface-variant">ODP</dt><dd class="font-mono">{{ $connection->odp->code }}</dd></div>
                     <div class="flex justify-between"><dt class="text-on-surface-variant">{{ __('hfnms.odp_port') }}</dt><dd class="font-mono">Port {{ $connection->odp_port_number }}</dd></div>
-                    <div class="flex justify-between"><dt class="text-on-surface-variant">{{ __('hfnms.splitter_port') }}</dt><dd class="font-mono">{{ $connection->splitterPort?->label ?? '—' }}</dd></div>
                     <div class="flex justify-between"><dt class="text-on-surface-variant">{{ __('hfnms.cable_core') }}</dt>
                         <dd class="font-mono text-[12px]">
                             @if ($connection->cableCore)

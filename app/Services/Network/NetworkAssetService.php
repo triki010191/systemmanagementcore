@@ -4,7 +4,6 @@ namespace App\Services\Network;
 
 use App\Enums\NetworkNodeStatus;
 use App\Enums\NetworkNodeType;
-use App\Enums\SplitterRatio;
 use App\Models\Customer;
 use App\Models\NetworkNode;
 use App\Models\Odc;
@@ -12,7 +11,6 @@ use App\Models\Odp;
 use App\Models\Olt;
 use App\Models\Otb;
 use App\Models\Pop;
-use App\Models\Splitter;
 use App\Repositories\NetworkNodeRepository;
 use App\Services\Audit\AuditLogService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -26,7 +24,6 @@ class NetworkAssetService
     public function __construct(
         private readonly NetworkNodeRepository $nodeRepository,
         private readonly AssetCodeGenerator $codeGenerator,
-        private readonly SplitterProvisioningService $splitterProvisioning,
         private readonly QrCodeService $qrCodeService,
         private readonly AuditLogService $auditLog,
     ) {}
@@ -46,6 +43,7 @@ class NetworkAssetService
     {
         return $type->domainModelClass()::query()
             ->with(['networkNode.parent', 'networkNode.children'])
+            ->when($type === NetworkNodeType::Odp, fn ($query) => $query->with(['odc.networkNode.parent']))
             ->findOrFail($id);
     }
 
@@ -70,10 +68,6 @@ class NetworkAssetService
             ]);
 
             $asset = $this->createDomainRecord($type, $node, $parentNode, $data, $code);
-
-            if ($type === NetworkNodeType::Splitter && $asset instanceof Splitter) {
-                $this->splitterProvisioning->provision($asset);
-            }
 
             if ($type->requiresQr()) {
                 $this->qrCodeService->generateForNode($node);
@@ -104,10 +98,12 @@ class NetworkAssetService
                 'code' => $code,
                 'name' => $data['name'],
                 'description' => $data['description'] ?? null,
-                'latitude' => $data['latitude'] ?? $node->latitude,
-                'longitude' => $data['longitude'] ?? $node->longitude,
+                'latitude' => array_key_exists('latitude', $data) ? $data['latitude'] : $node->latitude,
+                'longitude' => array_key_exists('longitude', $data) ? $data['longitude'] : $node->longitude,
                 'parent_id' => $parentNode?->id,
-                'status' => $data['status'] ?? $node->status,
+                'status' => isset($data['status'])
+                    ? NetworkNodeStatus::from((string) $data['status'])
+                    : $node->status,
                 'address' => $data['address'] ?? null,
             ]);
 
@@ -237,21 +233,16 @@ class NetworkAssetService
                 'port_capacity' => $data['port_capacity'] ?? 0,
                 'port_used' => $data['port_used'] ?? 0,
                 'split_ratio_default' => $data['split_ratio_default'] ?? null,
-            ]),
-            NetworkNodeType::Splitter => Splitter::query()->create([
-                'network_node_id' => $node->id,
-                'odc_id' => Odc::query()->where('network_node_id', $parentNode?->id)->value('id'),
-                'ratio' => $data['ratio'] ?? SplitterRatio::Ratio1x8,
-                'input_port_count' => 1,
-                'output_port_count' => SplitterRatio::from($data['ratio'] ?? '1:8')->outputPortCount(),
-                'brand' => $data['brand'] ?? null,
+                'cores_from_otb' => 0,
+                'cores_to_odp' => 0,
             ]),
             NetworkNodeType::Odp => Odp::query()->create([
                 'network_node_id' => $node->id,
                 'code' => $code,
-                'odc_id' => $this->resolveOdpOdcId($parentNode),
+                'odc_id' => Odc::query()->where('network_node_id', $parentNode?->id)->value('id'),
                 'port_capacity' => $data['port_capacity'] ?? 0,
                 'port_used' => $data['port_used'] ?? 0,
+                'cores_from_odc' => $data['cores_from_odc'] ?? 0,
             ]),
             NetworkNodeType::Customer => Customer::query()->create([
                 'network_node_id' => $node->id,
@@ -304,20 +295,15 @@ class NetworkAssetService
             NetworkNodeType::Odc => $asset->update([
                 'code' => $code,
                 'otb_id' => Otb::query()->where('network_node_id', $parentNode?->id)->value('id'),
-                'port_capacity' => $data['port_capacity'] ?? 0,
-                'port_used' => $data['port_used'] ?? 0,
+                'port_capacity' => $data['port_capacity'] ?? $asset->port_capacity ?? 0,
+                'port_used' => $data['port_used'] ?? $asset->port_used ?? 0,
                 'split_ratio_default' => $data['split_ratio_default'] ?? null,
-            ]),
-            NetworkNodeType::Splitter => $asset->update([
-                'odc_id' => Odc::query()->where('network_node_id', $parentNode?->id)->value('id'),
-                'ratio' => $data['ratio'] ?? $asset->ratio,
-                'brand' => $data['brand'] ?? null,
             ]),
             NetworkNodeType::Odp => $asset->update([
                 'code' => $code,
-                'odc_id' => $this->resolveOdpOdcId($parentNode),
-                'port_capacity' => $data['port_capacity'] ?? 0,
-                'port_used' => $data['port_used'] ?? 0,
+                'odc_id' => Odc::query()->where('network_node_id', $parentNode?->id)->value('id'),
+                'port_capacity' => $data['port_capacity'] ?? $asset->port_capacity ?? 0,
+                'port_used' => $data['port_used'] ?? $asset->port_used ?? 0,
             ]),
             NetworkNodeType::Customer => $asset->update([
                 'code' => $code,
@@ -335,22 +321,5 @@ class NetworkAssetService
                 'registered_at' => $data['registered_at'] ?? $asset->registered_at,
             ]),
         };
-    }
-
-    private function resolveOdpOdcId(?NetworkNode $parentNode): ?int
-    {
-        if (! $parentNode) {
-            return null;
-        }
-
-        if ($parentNode->type === NetworkNodeType::Splitter) {
-            return Splitter::query()->where('network_node_id', $parentNode->id)->value('odc_id');
-        }
-
-        if ($parentNode->type === NetworkNodeType::Odc) {
-            return Odc::query()->where('network_node_id', $parentNode->id)->value('id');
-        }
-
-        return null;
     }
 }

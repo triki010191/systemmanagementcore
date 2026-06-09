@@ -5,19 +5,20 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionSeeder extends Seeder
 {
     public function run(): void
     {
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
             // Network
             'network.view', 'network.create', 'network.edit', 'network.delete',
             'path-tracing.view', 'path-tracing.execute',
             'gis-map.view', 'gis-map.edit',
-            'cable.manage', 'core.manage', 'tube.manage', 'splitter.manage',
+            'cable.manage', 'core.manage', 'tube.manage',
             'customer.view', 'customer.manage',
             'fault.view', 'fault.manage',
             'maintenance.view', 'maintenance.manage',
@@ -37,13 +38,13 @@ class RolePermissionSeeder extends Seeder
             'super-admin' => $permissions,
             'noc' => [
                 'network.view', 'path-tracing.view', 'path-tracing.execute',
-                'gis-map.view', 'cable.manage', 'core.manage', 'tube.manage', 'splitter.manage',
+                'gis-map.view', 'cable.manage', 'core.manage', 'tube.manage',
                 'customer.view', 'fault.view', 'fault.manage', 'maintenance.view', 'report.view', 'report.export', 'audit.view',
             ],
             'teknisi' => [
                 'network.view', 'network.create', 'network.edit',
                 'path-tracing.view', 'path-tracing.execute',
-                'gis-map.view', 'cable.manage', 'core.manage', 'splitter.manage',
+                'gis-map.view', 'cable.manage', 'core.manage',
                 'customer.view', 'maintenance.view', 'maintenance.manage',
             ],
             'customer-service' => [

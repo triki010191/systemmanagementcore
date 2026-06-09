@@ -14,6 +14,7 @@ class Odp extends Model
         'odc_id',
         'port_capacity',
         'port_used',
+        'cores_from_odc',
     ];
 
     protected function casts(): array
@@ -21,6 +22,7 @@ class Odp extends Model
         return [
             'port_capacity' => 'integer',
             'port_used' => 'integer',
+            'cores_from_odc' => 'integer',
         ];
     }
 

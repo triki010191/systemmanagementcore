@@ -27,7 +27,6 @@
                         <th class="text-left px-lg py-sm">{{ __('hfnms.customer') }}</th>
                         <th class="text-left px-lg py-sm">ODP</th>
                         <th class="text-left px-lg py-sm">{{ __('hfnms.odp_port') }}</th>
-                        <th class="text-left px-lg py-sm">{{ __('hfnms.splitter_port') }}</th>
                         <th class="text-left px-lg py-sm">{{ __('hfnms.cable_core') }}</th>
                         <th class="text-left px-lg py-sm">{{ __('hfnms.drop_length') }}</th>
                         <th class="text-right px-lg py-sm"></th>
@@ -42,7 +41,6 @@
                             </td>
                             <td class="px-lg py-sm font-mono">{{ $conn->odp->code ?? '—' }}</td>
                             <td class="px-lg py-sm font-mono">{{ $conn->odp_port_number ?? '—' }}</td>
-                            <td class="px-lg py-sm font-mono">{{ $conn->splitterPort?->label ?? '—' }}</td>
                             <td class="px-lg py-sm font-mono text-[12px]">
                                 @if ($conn->cableCore)
                                     {{ $conn->cableCore->cable?->code }} #{{ $conn->cableCore->core_number }}

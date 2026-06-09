@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Services\Network\PathTracingService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -26,15 +27,21 @@ class PathTracingController extends Controller
             ->get();
 
         $trace = null;
+        $traceError = null;
         $code = $request->string('code')->trim()->toString();
 
         if ($code !== '') {
-            $trace = $this->pathTracingService->traceByCustomerCode($code);
+            try {
+                $trace = $this->pathTracingService->traceByCustomerCode($code);
+            } catch (ModelNotFoundException) {
+                $traceError = __('hfnms.customer_not_found', ['code' => $code]);
+            }
         }
 
         return view('network.path-tracing.index', [
             'customers' => $customers,
             'trace' => $trace,
+            'traceError' => $traceError,
             'searchCode' => $code,
         ]);
     }

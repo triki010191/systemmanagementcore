@@ -59,6 +59,13 @@
             </div>
         </div>
 
+        @if ($type === \App\Enums\NetworkNodeType::Odp && ! empty($odpUpstreamRoute))
+            @include('network.assets.partials.odp-upstream-map', [
+                'asset' => $asset,
+                'route' => $odpUpstreamRoute,
+            ])
+        @endif
+
         <div class="space-y-lg">
         @include('network.assets.partials.qr-photos', [
             'type' => $type,
@@ -70,9 +77,9 @@
         ])
         </div>
 
-        @can('network.delete')
+        @can('network.edit')
             <form method="POST" action="{{ route('network.assets.destroy', [$type->routeSlug(), $asset->id]) }}"
-                  onsubmit="return confirm('{{ __('hfnms.confirm_delete') }}')">
+                  onsubmit="return confirm(@js(__('hfnms.confirm_delete')))">
                 @csrf @method('DELETE')
                 <button type="submit" class="text-error text-body-sm font-semibold hover:underline">{{ __('hfnms.delete_asset') }}</button>
             </form>

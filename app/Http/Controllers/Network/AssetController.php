@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Network;
 
 use App\Enums\NetworkNodeType;
-use App\Enums\SplitterRatio;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Network\StoreNetworkAssetRequest;
 use App\Http\Requests\Network\UpdateNetworkAssetRequest;
+use App\Models\NetworkNode;
 use App\Repositories\NetworkNodeRepository;
 use App\Services\Network\AssetCodeGenerator;
 use App\Services\Network\AssetPhotoService;
+use App\Services\Network\CableActivationService;
+use App\Services\Network\GisMapService;
 use App\Services\Network\NetworkAssetService;
+use App\Services\Network\OdcDistributionService;
 use App\Services\Network\QrCodeService;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use RuntimeException;
 
@@ -25,6 +28,9 @@ class AssetController extends Controller
         private readonly AssetCodeGenerator $codeGenerator,
         private readonly QrCodeService $qrCodeService,
         private readonly AssetPhotoService $photoService,
+        private readonly GisMapService $gisMapService,
+        private readonly OdcDistributionService $odcDistributionService,
+        private readonly CableActivationService $cableActivationService,
     ) {}
 
     public function index(string $type): View
@@ -46,7 +52,6 @@ class AssetController extends Controller
             'asset' => null,
             'parents' => $this->parentsFor($nodeType),
             'suggestedCode' => $nodeType->usesAutoCode() ? $this->codeGenerator->next($nodeType) : null,
-            'splitterRatios' => SplitterRatio::cases(),
         ]);
     }
 
@@ -71,6 +76,12 @@ class AssetController extends Controller
         $record = $this->assetService->find($nodeType, $asset);
         $node = $record->networkNode;
 
+        $record->loadMissing($nodeType === NetworkNodeType::Odc ? [
+            'splitters.inputCable',
+            'splitters.outputs.targetNode',
+            'splitters.outputs.outboundCable',
+        ] : []);
+
         return view('network.assets.show', [
             'type' => $nodeType,
             'asset' => $record,
@@ -78,6 +89,9 @@ class AssetController extends Controller
             'photoCompliance' => $this->photoService->complianceStatus($node),
             'qrUrl' => $this->qrCodeService->publicUrl($node->qr_code_path),
             'scanUrl' => $this->qrCodeService->scanUrl($node),
+            'odpUpstreamRoute' => $nodeType === NetworkNodeType::Odp
+                ? $this->gisMapService->getOdpUpstreamPayload($record)
+                : null,
         ]);
     }
 
@@ -89,9 +103,14 @@ class AssetController extends Controller
         return view('network.assets.form', [
             'type' => $nodeType,
             'asset' => $record,
-            'parents' => $this->parentsFor($nodeType),
+            'parents' => $this->parentsFor($nodeType, $record->networkNode->parent_id),
             'suggestedCode' => null,
-            'splitterRatios' => SplitterRatio::cases(),
+            'odcDistribution' => $nodeType === NetworkNodeType::Odc
+                ? $this->odcDistributionService->formPayload($record)
+                : null,
+            'plannedCables' => in_array($nodeType, [NetworkNodeType::Odc, NetworkNodeType::Odp], true)
+                ? $this->cableActivationService->plannedCablesAtNode((int) $record->network_node_id)
+                : [],
         ]);
     }
 
@@ -113,7 +132,7 @@ class AssetController extends Controller
 
     public function destroy(string $type, int $asset): RedirectResponse
     {
-        $this->authorize('network.delete');
+        $this->authorize('network.edit');
 
         $nodeType = $this->resolveType($type);
         $record = $this->assetService->find($nodeType, $asset);
@@ -140,13 +159,13 @@ class AssetController extends Controller
         return $type;
     }
 
-    /** @return \Illuminate\Support\Collection<int, \App\Models\NetworkNode> */
-    private function parentsFor(NetworkNodeType $type): \Illuminate\Support\Collection
+    /** @return Collection<int, NetworkNode> */
+    private function parentsFor(NetworkNodeType $type, ?int $currentParentId = null): Collection
     {
         $parentType = $type->expectedParentType();
 
         return $parentType
-            ? $this->nodeRepository->parentsOfType($parentType)
+            ? $this->nodeRepository->parentsOfType($parentType, $currentParentId)
             : collect();
     }
 }

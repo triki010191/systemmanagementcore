@@ -4,7 +4,7 @@
         ? route('customer-connections.update', $connection)
         : route('customer-connections.store');
     $initialOdp = old('odp_id', $connection?->odp_id ?? $suggestedOdpId ?? '');
-    $initialOptions = $odpOptions ?? ['splitter_ports' => [], 'cable_cores' => [], 'taken_odp_ports' => [], 'odp' => null];
+    $initialOptions = $odpOptions ?? ['cable_cores' => [], 'taken_odp_ports' => [], 'odp' => null];
 @endphp
 
 <x-app-layout>
@@ -26,22 +26,19 @@
               x-data="{
                 odpId: '{{ $initialOdp }}',
                 exceptId: {{ $connection?->id ?? 'null' }},
-                splitterPorts: @js($initialOptions['splitter_ports'] ?? []),
                 cableCores: @js($initialOptions['cable_cores'] ?? []),
                 takenOdpPorts: @js($initialOptions['taken_odp_ports'] ?? []),
-                selectedSplitterPort: '{{ old('splitter_port_id', $connection?->splitter_port_id) }}',
                 selectedCore: '{{ old('cable_core_id', $connection?->cable_core_id) }}',
                 async loadOptions() {
-                    if (!this.odpId) { this.splitterPorts = []; this.cableCores = []; this.takenOdpPorts = []; return; }
+                    if (!this.odpId) { this.cableCores = []; this.takenOdpPorts = []; return; }
                     let url = '{{ url('/customer-connections/odp-options') }}/' + this.odpId;
                     if (this.exceptId) url += '?except=' + this.exceptId;
                     const data = await (await fetch(url)).json();
-                    this.splitterPorts = data.splitter_ports || [];
                     this.cableCores = data.cable_cores || [];
                     this.takenOdpPorts = data.taken_odp_ports || [];
                 }
               }"
-              x-init="if (odpId && !splitterPorts.length) loadOptions()">
+              x-init="if (odpId && !cableCores.length) loadOptions()">
             @csrf
             @if ($isEdit) @method('PUT') @endif
 
@@ -109,29 +106,16 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
-                <div>
-                    <label class="text-label-caps text-on-surface-variant block mb-xs">{{ __('hfnms.splitter_port') }}</label>
-                    <select name="splitter_port_id" class="w-full rounded-lg border-outline-variant font-mono text-body-sm"
-                            x-model="selectedSplitterPort">
-                        <option value="">{{ __('hfnms.none_optional') }}</option>
-                        <template x-for="port in splitterPorts" :key="port.id">
-                            <option :value="port.id" :disabled="!port.available" x-text="port.label + (port.available ? '' : ' ({{ __('hfnms.in_use') }})')"></option>
-                        </template>
-                    </select>
-                    @error('splitter_port_id') <p class="text-error text-body-sm mt-xs">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label class="text-label-caps text-on-surface-variant block mb-xs">{{ __('hfnms.cable_core') }}</label>
-                    <select name="cable_core_id" class="w-full rounded-lg border-outline-variant text-body-sm"
-                            x-model="selectedCore">
-                        <option value="">{{ __('hfnms.none_optional') }}</option>
-                        <template x-for="core in cableCores" :key="core.id">
-                            <option :value="core.id" :disabled="!core.available" x-text="core.label + (core.available ? '' : ' ({{ __('hfnms.in_use') }})')"></option>
-                        </template>
-                    </select>
-                    @error('cable_core_id') <p class="text-error text-body-sm mt-xs">{{ $message }}</p> @enderror
-                </div>
+            <div>
+                <label class="text-label-caps text-on-surface-variant block mb-xs">{{ __('hfnms.cable_core') }}</label>
+                <select name="cable_core_id" class="w-full rounded-lg border-outline-variant text-body-sm"
+                        x-model="selectedCore">
+                    <option value="">{{ __('hfnms.none_optional') }}</option>
+                    <template x-for="core in cableCores" :key="core.id">
+                        <option :value="core.id" :disabled="!core.available" x-text="core.label + (core.available ? '' : ' ({{ __('hfnms.in_use') }})')"></option>
+                    </template>
+                </select>
+                @error('cable_core_id') <p class="text-error text-body-sm mt-xs">{{ $message }}</p> @enderror
             </div>
 
             <div>

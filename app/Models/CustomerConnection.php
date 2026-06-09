@@ -11,7 +11,6 @@ class CustomerConnection extends Model
         'customer_id',
         'odp_id',
         'cable_core_id',
-        'splitter_port_id',
         'odp_port_number',
         'drop_length_m',
         'connected_at',
@@ -39,10 +38,5 @@ class CustomerConnection extends Model
     public function cableCore(): BelongsTo
     {
         return $this->belongsTo(FiberCore::class, 'cable_core_id');
-    }
-
-    public function splitterPort(): BelongsTo
-    {
-        return $this->belongsTo(SplitterPort::class);
     }
 }

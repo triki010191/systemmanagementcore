@@ -24,6 +24,10 @@
             </div>
         @endif
 
+        @if ($errors->has('form'))
+            <div class="mb-md px-md py-sm bg-red-50 border border-red-200 text-error rounded-lg text-body-sm">{{ $errors->first('form') }}</div>
+        @endif
+
         <div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-x-auto">
             <table class="w-full text-body-sm">
                 <thead class="bg-surface-container-low text-on-surface-variant text-label-caps">
@@ -47,10 +51,15 @@
                                 <span class="px-sm py-xs rounded text-[11px] font-bold uppercase bg-surface-container">{{ $node->status->value }}</span>
                             </td>
                             <td class="px-lg py-sm font-mono text-[12px]">{{ $node->latitude }}, {{ $node->longitude }}</td>
-                            <td class="px-lg py-sm text-right space-x-sm">
+                            <td class="px-lg py-sm text-right space-x-sm whitespace-nowrap">
                                 <a href="{{ route('network.assets.show', [$type->routeSlug(), $record->id]) }}" class="text-primary font-semibold hover:underline">{{ __('hfnms.view') }}</a>
                                 @can('network.edit')
                                     <a href="{{ route('network.assets.edit', [$type->routeSlug(), $record->id]) }}" class="text-on-surface-variant hover:text-primary">{{ __('hfnms.edit') }}</a>
+                                    <form method="POST" action="{{ route('network.assets.destroy', [$type->routeSlug(), $record->id]) }}" class="inline"
+                                          onsubmit="return confirm(@js(__('hfnms.confirm_delete')))">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-error hover:underline">{{ __('hfnms.delete') }}</button>
+                                    </form>
                                 @endcan
                             </td>
                         </tr>

@@ -1,8 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <h2 class="font-semibold text-headline-md text-on-surface">{{ __('hfnms.cable_management') }}</h2>
-            <p class="text-body-sm text-on-surface-variant">{{ __('hfnms.cable_management_subtitle') }}</p>
+        <div class="flex flex-wrap items-center justify-between gap-md w-full">
+            <div>
+                <h2 class="font-semibold text-headline-md text-on-surface">{{ __('hfnms.cable_management') }}</h2>
+                <p class="text-body-sm text-on-surface-variant">{{ __('hfnms.cable_management_subtitle') }}</p>
+            </div>
+            @can('cable.manage')
+                <a href="{{ route('cables.create') }}"
+                   class="inline-flex items-center gap-xs px-md py-sm bg-primary text-on-primary rounded font-semibold text-body-sm hover:opacity-90">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                    {{ __('hfnms.add_cable') }}
+                </a>
+            @endcan
         </div>
     </x-slot>
 
@@ -29,8 +38,11 @@
                                 {{ $cable->startNode?->code ?? '—' }} → {{ $cable->endNode?->code ?? '—' }}
                             </td>
                             <td class="px-lg py-sm">{{ number_format($cable->length_meters ?? 0) }} m</td>
-                            <td class="px-lg py-sm text-right">
+                            <td class="px-lg py-sm text-right space-x-sm">
                                 <a href="{{ route('cables.show', $cable) }}" class="text-primary font-semibold hover:underline">{{ __('hfnms.view_detail') }}</a>
+                                @can('cable.manage')
+                                    <a href="{{ route('cables.edit', $cable) }}" class="text-on-surface-variant font-semibold hover:underline">{{ __('hfnms.edit') }}</a>
+                                @endcan
                             </td>
                         </tr>
                     @empty

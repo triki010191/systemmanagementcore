@@ -14,7 +14,6 @@ class CustomerConnectionRepository
                 'customer.networkNode',
                 'odp.networkNode',
                 'cableCore.cable',
-                'splitterPort.splitter.networkNode',
             ])
             ->latest()
             ->paginate($perPage);
@@ -27,7 +26,6 @@ class CustomerConnectionRepository
                 'customer.networkNode.parent',
                 'odp.networkNode.parent',
                 'cableCore.cable',
-                'splitterPort.splitter.networkNode',
             ])
             ->findOrFail($id);
     }
@@ -54,17 +52,6 @@ class CustomerConnectionRepository
         $query = CustomerConnection::query()
             ->where('odp_id', $odpId)
             ->where('odp_port_number', $portNumber);
-
-        if ($exceptConnectionId) {
-            $query->where('id', '!=', $exceptConnectionId);
-        }
-
-        return $query->exists();
-    }
-
-    public function splitterPortTaken(int $portId, ?int $exceptConnectionId = null): bool
-    {
-        $query = CustomerConnection::query()->where('splitter_port_id', $portId);
 
         if ($exceptConnectionId) {
             $query->where('id', '!=', $exceptConnectionId);

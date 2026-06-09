@@ -2,13 +2,20 @@
 
 namespace App\Enums;
 
+use App\Models\Customer;
+use App\Models\Odc;
+use App\Models\Odp;
+use App\Models\Olt;
+use App\Models\Otb;
+use App\Models\Pop;
+use Illuminate\Database\Eloquent\Model;
+
 enum NetworkNodeType: string
 {
     case Pop = 'pop';
     case Olt = 'olt';
     case Otb = 'otb';
     case Odc = 'odc';
-    case Splitter = 'splitter';
     case Odp = 'odp';
     case Customer = 'customer';
 
@@ -19,7 +26,6 @@ enum NetworkNodeType: string
             self::Olt => 'OLT',
             self::Otb => 'OTB',
             self::Odc => 'ODC',
-            self::Splitter => 'Splitter',
             self::Odp => 'ODP',
             self::Customer => 'Pelanggan',
         };
@@ -33,9 +39,8 @@ enum NetworkNodeType: string
             self::Olt => 1,
             self::Otb => 2,
             self::Odc => 3,
-            self::Splitter => 4,
-            self::Odp => 5,
-            self::Customer => 6,
+            self::Odp => 4,
+            self::Customer => 5,
         };
     }
 
@@ -46,7 +51,6 @@ enum NetworkNodeType: string
             self::Olt => 'olts',
             self::Otb => 'otbs',
             self::Odc => 'odcs',
-            self::Splitter => 'splitters',
             self::Odp => 'odps',
             self::Customer => 'customers',
         };
@@ -70,23 +74,21 @@ enum NetworkNodeType: string
             self::Olt => self::Pop,
             self::Otb => self::Olt,
             self::Odc => self::Otb,
-            self::Splitter => self::Odc,
-            self::Odp => self::Splitter,
+            self::Odp => self::Odc,
             self::Customer => self::Odp,
         };
     }
 
-    /** @return class-string<\Illuminate\Database\Eloquent\Model> */
+    /** @return class-string<Model> */
     public function domainModelClass(): string
     {
         return match ($this) {
-            self::Pop => \App\Models\Pop::class,
-            self::Olt => \App\Models\Olt::class,
-            self::Otb => \App\Models\Otb::class,
-            self::Odc => \App\Models\Odc::class,
-            self::Splitter => \App\Models\Splitter::class,
-            self::Odp => \App\Models\Odp::class,
-            self::Customer => \App\Models\Customer::class,
+            self::Pop => Pop::class,
+            self::Olt => Olt::class,
+            self::Otb => Otb::class,
+            self::Odc => Odc::class,
+            self::Odp => Odp::class,
+            self::Customer => Customer::class,
         };
     }
 
@@ -109,7 +111,7 @@ enum NetworkNodeType: string
     public function requiresQr(): bool
     {
         return match ($this) {
-            self::Pop, self::Otb, self::Odc, self::Odp, self::Splitter, self::Customer => true,
+            self::Pop, self::Otb, self::Odc, self::Odp, self::Customer => true,
             default => false,
         };
     }

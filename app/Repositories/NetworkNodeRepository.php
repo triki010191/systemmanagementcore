@@ -48,13 +48,23 @@ class NetworkNodeRepository
     }
 
     /** @return Collection<int, NetworkNode> */
-    public function parentsOfType(NetworkNodeType $type): Collection
+    public function parentsOfType(NetworkNodeType $type, ?int $ensureNodeId = null): Collection
     {
-        return NetworkNode::query()
+        $parents = NetworkNode::query()
             ->where('type', $type)
-            ->where('status', '!=', 'inactive')
             ->orderBy('code')
-            ->get(['id', 'code', 'name', 'type']);
+            ->get(['id', 'code', 'name', 'type', 'status']);
+
+        if ($ensureNodeId && ! $parents->contains('id', $ensureNodeId)) {
+            $current = NetworkNode::query()->find($ensureNodeId);
+
+            if ($current && $current->type === $type) {
+                $parents->push($current);
+                $parents = $parents->sortBy('code')->values();
+            }
+        }
+
+        return $parents;
     }
 
     public function paginateByType(NetworkNodeType $type, int $perPage = 15): LengthAwarePaginator

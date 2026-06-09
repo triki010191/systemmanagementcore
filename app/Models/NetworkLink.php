@@ -19,8 +19,6 @@ class NetworkLink extends Model
         'direction',
         'cable_id',
         'fiber_core_id',
-        'source_port_id',
-        'target_port_id',
         'core_number',
         'tube_number',
         'tube_color_id',
@@ -61,16 +59,6 @@ class NetworkLink extends Model
     public function fiberCore(): BelongsTo
     {
         return $this->belongsTo(FiberCore::class, 'fiber_core_id');
-    }
-
-    public function sourcePort(): BelongsTo
-    {
-        return $this->belongsTo(SplitterPort::class, 'source_port_id');
-    }
-
-    public function targetPort(): BelongsTo
-    {
-        return $this->belongsTo(SplitterPort::class, 'target_port_id');
     }
 
     public function tubeColor(): BelongsTo

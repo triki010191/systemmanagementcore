@@ -287,15 +287,21 @@
         </section>
 
         <div class="p-md bg-gradient-to-r from-primary-fixed/40 to-blue-50 rounded-xl border border-primary/10 flex flex-wrap items-center gap-md">
-            <p class="text-body-sm text-on-surface-variant">{{ __('hfnms.demo_hint') }}</p>
-            <a href="{{ route('path-tracing.index', ['code' => 'HNT000001']) }}" class="inline-flex items-center gap-xs text-primary font-semibold text-body-sm hover:underline">
+            <p class="text-body-sm text-on-surface-variant">{{ __('hfnms.quick_links_hint') }}</p>
+            <a href="{{ route('path-tracing.index') }}" class="inline-flex items-center gap-xs text-primary font-semibold text-body-sm hover:underline">
                 <span class="material-symbols-outlined text-[18px]">route</span>
-                HNT000001 — Budi Santoso
+                {{ __('hfnms.path_tracing_title') }}
             </a>
+            @can('network.create')
+                <a href="{{ route('network.assets.create', 'customers') }}" class="inline-flex items-center gap-xs text-primary font-semibold text-body-sm hover:underline">
+                    <span class="material-symbols-outlined text-[18px]">person_add</span>
+                    {{ __('hfnms.add_asset', ['type' => 'Pelanggan']) }}
+                </a>
+            @endcan
             @can('cable.manage')
-                <a href="{{ route('impact-analysis.index', ['mode' => 'node', 'node_code' => 'ODP-001']) }}" class="inline-flex items-center gap-xs text-primary font-semibold text-body-sm hover:underline">
-                    <span class="material-symbols-outlined text-[18px]">bolt</span>
-                    Impact ODP-001
+                <a href="{{ route('cables.create') }}" class="inline-flex items-center gap-xs text-primary font-semibold text-body-sm hover:underline">
+                    <span class="material-symbols-outlined text-[18px]">cable</span>
+                    {{ __('hfnms.add_cable') }}
                 </a>
             @endcan
         </div>

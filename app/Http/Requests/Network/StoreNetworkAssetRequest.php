@@ -3,15 +3,47 @@
 namespace App\Http\Requests\Network;
 
 use App\Enums\NetworkNodeType;
-use App\Enums\SplitterRatio;
+use App\Support\GpsCoordinateParser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreNetworkAssetRequest extends FormRequest
 {
     public function authorize(): bool
     {
         return $this->user()?->can('network.create') ?? false;
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('gps_coordinates')) {
+            return;
+        }
+
+        $parsed = GpsCoordinateParser::parse($this->input('gps_coordinates'));
+
+        if ($parsed) {
+            $this->merge([
+                'latitude' => $parsed['lat'],
+                'longitude' => $parsed['lng'],
+            ]);
+        }
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            $type = NetworkNodeType::fromRouteSlug((string) $this->route('type'));
+
+            if (! $type?->requiresGps() || is_numeric($this->input('latitude'))) {
+                return;
+            }
+
+            if ($this->filled('gps_coordinates')) {
+                $validator->errors()->add('gps_coordinates', __('hfnms.gps_invalid'));
+            }
+        });
     }
 
     /** @return array<string, mixed> */
@@ -23,12 +55,15 @@ class StoreNetworkAssetRequest extends FormRequest
             return [];
         }
 
+        $gpsRequired = $type->requiresGps();
+
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'code' => ['nullable', 'string', 'max:50', 'unique:network_nodes,code'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'latitude' => [$type->requiresGps() ? 'required' : 'nullable', 'numeric', 'between:-90,90'],
-            'longitude' => [$type->requiresGps() ? 'required' : 'nullable', 'numeric', 'between:-180,180'],
+            'gps_coordinates' => [$gpsRequired ? 'required' : 'nullable', 'string', 'max:120'],
+            'latitude' => [$gpsRequired ? 'required' : 'nullable', 'numeric', 'between:-90,90'],
+            'longitude' => [$gpsRequired ? 'required' : 'nullable', 'numeric', 'between:-180,180'],
             'address' => ['nullable', 'string', 'max:500'],
             'status' => ['required', Rule::in(['active', 'inactive', 'maintenance', 'fault'])],
             'parent_id' => [$type->expectedParentType() ? 'required' : 'nullable', 'exists:network_nodes,id'],
@@ -63,13 +98,10 @@ class StoreNetworkAssetRequest extends FormRequest
                 'port_used' => ['nullable', 'integer', 'min:0'],
                 'split_ratio_default' => ['nullable', 'string', 'max:10'],
             ],
-            NetworkNodeType::Splitter => [
-                'ratio' => ['required', Rule::enum(SplitterRatio::class)],
-                'brand' => ['nullable', 'string', 'max:100'],
-            ],
             NetworkNodeType::Odp => [
                 'port_capacity' => ['nullable', 'integer', 'min:0'],
                 'port_used' => ['nullable', 'integer', 'min:0'],
+                'cores_from_odc' => ['nullable', 'integer', 'min:0', 'max:999'],
             ],
             NetworkNodeType::Customer => [
                 'phone' => ['nullable', 'string', 'max:20'],

@@ -93,50 +93,7 @@
                     </div>
 
                     <section class="bg-surface-container-lowest border border-outline-variant p-xl rounded-lg overflow-x-auto">
-                        <div class="flex items-center justify-between min-w-max relative z-10 px-sm">
-                            @foreach ($trace->hops as $index => $hop)
-                                @php
-                                    $isCustomer = $hop['type'] === 'customer';
-                                    $isPop = $hop['type'] === 'pop';
-                                    $icon = match ($hop['type']) {
-                                        'customer' => 'person',
-                                        'pop' => 'cloud',
-                                        'olt' => 'router',
-                                        'otb' => 'account_tree',
-                                        'odc' => 'storage',
-                                        'splitter' => 'lan',
-                                        'odp' => 'lan',
-                                        default => 'circle',
-                                    };
-                                @endphp
-                                <div class="flex flex-col items-center space-y-sm relative path-trace-node px-md">
-                                    <div class="w-12 h-12 {{ $isCustomer || $isPop ? 'bg-primary-container text-white rounded-full shadow-lg' : 'bg-surface-container-highest text-on-surface-variant rounded-lg border border-outline-variant' }} flex items-center justify-center">
-                                        <span class="material-symbols-outlined">{{ $icon }}</span>
-                                    </div>
-                                    <div class="text-center">
-                                        <p class="text-label-caps {{ $isCustomer || $isPop ? 'text-primary' : 'text-on-surface-variant' }}">{{ $hop['type_label'] }}</p>
-                                        <p class="font-mono text-body-sm">{{ $hop['code'] }}</p>
-                                        @if (! empty($hop['port']))
-                                            <p class="text-[10px] text-outline">{{ $hop['port'] }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-
-                        <div class="mt-xl flex items-center flex-wrap gap-lg justify-center">
-                            @if ($trace->metrics['rx_power_dbm'])
-                                <div class="flex items-center">
-                                    <span class="w-3 h-3 bg-success rounded-full mr-2 animate-pulse"></span>
-                                    <span class="text-body-sm font-bold">RX: {{ $trace->metrics['rx_power_dbm'] }} dBm</span>
-                                </div>
-                            @endif
-                            @if ($trace->metrics['distance_km'])
-                                <div class="flex items-center">
-                                    <span class="text-body-sm font-bold">{{ __('hfnms.distance') }}: {{ $trace->metrics['distance_km'] }} km</span>
-                                </div>
-                            @endif
-                        </div>
+                        <x-network.path-trace-diagram :hops="$trace->hops" :metrics="$trace->metrics" />
                     </section>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-md">
@@ -173,13 +130,23 @@
                     </div>
                 @else
                     <div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-xl text-center">
+                        @if ($traceError ?? false)
+                            <div class="mb-md px-md py-sm bg-red-50 border border-red-200 text-error rounded-lg text-body-sm">{{ $traceError }}</div>
+                        @endif
                         <span class="material-symbols-outlined text-[48px] text-outline-variant mb-md">route</span>
                         <h3 class="font-semibold text-headline-md mb-sm">{{ __('hfnms.select_customer') }}</h3>
                         <p class="text-on-surface-variant text-body-sm max-w-md mx-auto">{{ __('hfnms.path_tracing_empty') }}</p>
-                        <a href="{{ route('path-tracing.index', ['code' => 'HNT000001']) }}" class="inline-flex items-center gap-sm mt-lg px-md py-sm bg-primary text-on-primary rounded font-semibold text-body-sm hover:opacity-90">
-                            <span class="material-symbols-outlined text-[18px]">play_arrow</span>
-                            Demo: HNT000001
-                        </a>
+                        @if ($customers->isNotEmpty())
+                            <a href="{{ route('path-tracing.index', ['code' => $customers->first()->code]) }}" class="inline-flex items-center gap-sm mt-lg px-md py-sm bg-primary text-on-primary rounded font-semibold text-body-sm hover:opacity-90">
+                                <span class="material-symbols-outlined text-[18px]">person_search</span>
+                                {{ $customers->first()->code }} — {{ $customers->first()->name }}
+                            </a>
+                        @else
+                            <a href="{{ route('network.assets.create', 'customers') }}" class="inline-flex items-center gap-sm mt-lg px-md py-sm bg-primary text-on-primary rounded font-semibold text-body-sm hover:opacity-90">
+                                <span class="material-symbols-outlined text-[18px]">add</span>
+                                {{ __('hfnms.add_first_customer') }}
+                            </a>
+                        @endif
                     </div>
                 @endif
             </div>

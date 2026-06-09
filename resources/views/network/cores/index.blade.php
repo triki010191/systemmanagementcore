@@ -14,6 +14,16 @@
     </x-slot>
 
     <div class="max-w-[1600px] mx-auto">
+        @if (session('success'))
+            <div class="mb-md px-md py-sm bg-green-50 border border-green-200 text-success rounded-lg text-body-sm">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->has('form'))
+            <div class="mb-md px-md py-sm bg-red-50 border border-red-200 text-error rounded-lg text-body-sm">{{ $errors->first('form') }}</div>
+        @endif
+
         <div class="grid grid-cols-2 md:grid-cols-5 gap-sm mb-md">
             @foreach ($statuses as $status)
                 @php $count = $statusCounts[$status->value] ?? 0; @endphp
@@ -80,9 +90,16 @@
                             <td class="px-lg py-sm text-[12px]">
                                 {{ $core->sourceNode?->code ?? '—' }} → {{ $core->targetNode?->code ?? '—' }}
                             </td>
-                            <td class="px-lg py-sm text-right">
-                                @can('cable.manage')
-                                    <a href="{{ route('cables.show', $core->cable) }}#core-{{ $core->id }}" class="text-primary font-semibold hover:underline">{{ __('hfnms.view') }}</a>
+                            <td class="px-lg py-sm text-right whitespace-nowrap space-x-sm">
+                                @can('core.manage')
+                                    <a href="{{ route('cores.edit', $core) }}" class="text-primary font-semibold hover:underline">{{ __('hfnms.edit') }}</a>
+                                    @if (! $core->status || $core->status->value !== 'used')
+                                        <form method="POST" action="{{ route('cores.destroy', $core) }}" class="inline"
+                                              onsubmit="return confirm(@js(__('hfnms.confirm_delete_core')))">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="text-error hover:underline">{{ __('hfnms.delete') }}</button>
+                                        </form>
+                                    @endif
                                 @endcan
                             </td>
                         </tr>

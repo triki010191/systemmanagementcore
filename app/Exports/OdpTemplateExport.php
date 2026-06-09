@@ -16,15 +16,16 @@ class OdpTemplateExport implements FromArray, WithHeadings, WithTitle
             'latitude',
             'longitude',
             'address',
-            'parent_splitter_code',
+            'parent_odc_code',
             'port_capacity',
+            'cores_from_odc',
         ];
     }
 
     public function array(): array
     {
         return [
-            ['ODP-002', 'ODP Jalan Thamrin', '-6.1780', '106.8680', 'Jl. Thamrin, Jakarta', 'SPL-ODC-001', '16'],
+            ['ODP-002', 'ODP Jalan Thamrin', '-6.1780', '106.8680', 'Jl. Thamrin, Jakarta', 'ODC-001', '16', '2'],
         ];
     }
 

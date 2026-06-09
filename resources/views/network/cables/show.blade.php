@@ -5,7 +5,16 @@
                 <h2 class="font-semibold text-headline-md text-on-surface">{{ $cable->code }}</h2>
                 <p class="text-body-sm text-on-surface-variant">{{ $cable->name }} · {{ $cable->core_count }} core</p>
             </div>
-            <a href="{{ route('cables.index') }}" class="ml-auto text-body-sm text-primary font-semibold hover:underline">← {{ __('hfnms.back') }}</a>
+            <div class="flex items-center gap-sm ml-auto">
+                @can('cable.manage')
+                    <a href="{{ route('cables.edit', $cable) }}" class="text-body-sm text-primary font-semibold hover:underline">{{ __('hfnms.edit') }}</a>
+                    <form method="POST" action="{{ route('cables.destroy', $cable) }}" class="inline" onsubmit="return confirm('{{ __('hfnms.confirm_delete') }}')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="text-body-sm text-error font-semibold hover:underline">{{ __('hfnms.delete') }}</button>
+                    </form>
+                @endcan
+                <a href="{{ route('cables.index') }}" class="text-body-sm text-primary font-semibold hover:underline">← {{ __('hfnms.back') }}</a>
+            </div>
         </div>
     </x-slot>
 

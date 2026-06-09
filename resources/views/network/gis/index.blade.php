@@ -73,7 +73,7 @@
 
                     <div>
                         <p class="text-label-caps text-on-surface-variant mb-sm">{{ __('hfnms.gis_base_map') }}</p>
-                        <div class="grid grid-cols-2 gap-xs">
+                        <div class="grid grid-cols-3 gap-xs">
                             <button type="button" data-base="satellite"
                                     class="gis-base-btn active px-sm py-xs rounded-md text-body-sm font-medium border border-primary bg-primary/10 text-primary">
                                 {{ __('hfnms.gis_satellite') }}
@@ -81,6 +81,10 @@
                             <button type="button" data-base="street"
                                     class="gis-base-btn px-sm py-xs rounded-md text-body-sm font-medium border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
                                 {{ __('hfnms.gis_street') }}
+                            </button>
+                            <button type="button" data-base="none"
+                                    class="gis-base-btn px-sm py-xs rounded-md text-body-sm font-medium border border-outline-variant text-on-surface-variant hover:bg-surface-container-low">
+                                {{ __('hfnms.gis_hide_base') }}
                             </button>
                         </div>
                     </div>
@@ -101,10 +105,23 @@
                                 {{ __('hfnms.gis_layer_links') }}
                             </label>
                             <label class="flex items-center gap-sm text-body-sm cursor-pointer">
+                                <input type="checkbox" id="layer-joints" checked class="rounded border-outline-variant text-primary focus:ring-primary">
+                                {{ __('hfnms.gis_layer_joints') }}
+                            </label>
+                            <label class="flex items-center gap-sm text-body-sm cursor-pointer">
+                                <input type="checkbox" id="layer-odp-routes" checked class="rounded border-outline-variant text-primary focus:ring-primary">
+                                {{ __('hfnms.gis_layer_odp_routes') }}
+                            </label>
+                            <label class="flex items-center gap-sm text-body-sm cursor-pointer">
                                 <input type="checkbox" id="layer-labels" checked class="rounded border-outline-variant text-primary focus:ring-primary">
                                 {{ __('hfnms.gis_layer_labels') }}
                             </label>
+                            <label class="flex items-center gap-sm text-body-sm cursor-pointer">
+                                <input type="checkbox" id="follow-roads" checked class="rounded border-outline-variant text-primary focus:ring-primary">
+                                {{ __('hfnms.gis_follow_roads') }}
+                            </label>
                         </div>
+                        <p class="text-[11px] text-outline mt-xs">{{ __('hfnms.gis_follow_roads_help') }}</p>
                     </div>
 
                     <div>
@@ -149,7 +166,8 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
     <style>
-        #gis-map { background: #1a1a2e; }
+        #gis-map { background: #eef2f7; }
+        #gis-map.gis-no-base { background: #eef2f7; }
         .leaflet-container { font-family: Inter, system-ui, sans-serif; }
 
         .gis-marker-wrap {
@@ -251,13 +269,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             const mapData = @json($mapData);
             const brandShort = @json($companyShort);
+            const routeUrl = @json(route('gis.route'));
+            const odpRouteLabel = @json(__('hfnms.odp_upstream_route'));
 
             const deviceSvgs = {
                 pop: '<rect x="4" y="6" width="14" height="10" rx="1" fill="#1B2A41"/><rect x="6" y="8" width="3" height="2" fill="#64B5F6"/><rect x="10" y="8" width="3" height="2" fill="#64B5F6"/><rect x="14" y="8" width="2" height="6" fill="#455A64"/>',
                 olt: '<rect x="3" y="5" width="16" height="12" rx="1" fill="#0D47A1"/><rect x="5" y="7" width="2" height="2" fill="#4FC3F7"/><rect x="8" y="7" width="2" height="2" fill="#4FC3F7"/><rect x="11" y="7" width="2" height="2" fill="#4FC3F7"/><rect x="14" y="7" width="2" height="2" fill="#81C784"/><rect x="5" y="11" width="11" height="1" fill="#1565C0"/>',
                 otb: '<rect x="4" y="4" width="14" height="14" rx="1" fill="#455A64"/><line x1="6" y1="7" x2="16" y2="7" stroke="#90A4AE" stroke-width="1"/><line x1="6" y1="10" x2="16" y2="10" stroke="#90A4AE" stroke-width="1"/><line x1="6" y1="13" x2="16" y2="13" stroke="#90A4AE" stroke-width="1"/>',
                 odc: '<rect x="3" y="3" width="16" height="16" rx="2" fill="#37474F"/><rect x="5" y="5" width="12" height="4" rx="1" fill="#546E7A"/><circle cx="7" cy="13" r="1.5" fill="#4FC3F7"/><circle cx="11" cy="13" r="1.5" fill="#4FC3F7"/><circle cx="15" cy="13" r="1.5" fill="#4FC3F7"/>',
-                splitter: '<rect x="5" y="6" width="12" height="10" rx="1" fill="#6A1B9A"/><line x1="7" y1="11" x2="15" y2="11" stroke="#CE93D8" stroke-width="1.5"/><circle cx="8" cy="11" r="1" fill="#E1BEE7"/><circle cx="12" cy="11" r="1" fill="#E1BEE7"/><circle cx="16" cy="11" r="1" fill="#E1BEE7"/>',
                 odp: '<rect x="4" y="5" width="14" height="12" rx="1" fill="#1565C0"/><rect x="6" y="7" width="2" height="2" rx=".3" fill="#BBDEFB"/><rect x="9" y="7" width="2" height="2" rx=".3" fill="#BBDEFB"/><rect x="12" y="7" width="2" height="2" rx=".3" fill="#BBDEFB"/><rect x="15" y="7" width="2" height="2" rx=".3" fill="#81C784"/><rect x="6" y="11" width="11" height="2" rx=".3" fill="#0D47A1"/>',
                 customer: '<path d="M11 4 L6 10 H16 Z" fill="#2E7D32"/><rect x="7" y="10" width="8" height="6" fill="#388E3C"/><rect x="10" y="12" width="2" height="4" fill="#A5D6A7"/>',
                 generic: '<rect x="5" y="6" width="12" height="10" rx="1" fill="#546E7A"/><line x1="8" y1="11" x2="14" y2="11" stroke="#CFD8DC" stroke-width="1.5"/>',
@@ -318,11 +337,33 @@
 
             satellite.addTo(map);
             let activeBase = satellite;
+            let baseMode = 'satellite';
+
+            function setBaseMap(mode) {
+                baseMode = mode;
+                const mapEl = document.getElementById('gis-map');
+
+                if (activeBase && map.hasLayer(activeBase)) {
+                    map.removeLayer(activeBase);
+                }
+
+                if (mode === 'none') {
+                    activeBase = null;
+                    mapEl.classList.add('gis-no-base');
+                    return;
+                }
+
+                mapEl.classList.remove('gis-no-base');
+                activeBase = mode === 'street' ? street : satellite;
+                activeBase.addTo(map);
+            }
 
             const layers = {
                 nodes: L.layerGroup().addTo(map),
                 cables: L.layerGroup().addTo(map),
                 links: L.layerGroup().addTo(map),
+                joints: L.layerGroup().addTo(map),
+                odpRoutes: L.layerGroup().addTo(map),
                 labels: L.layerGroup().addTo(map),
             };
 
@@ -347,10 +388,83 @@
                 marker.addTo(layers.nodes);
             });
 
-            mapData.cables.forEach(cable => {
-                if (!cable.path || cable.path.length < 2) return;
+            const cableEntries = [];
+            const routableEntries = [];
+            const routeCache = new Map();
 
-                const line = L.polyline(cable.path, {
+            async function fetchRoadPath(endpoints) {
+                const cacheKey = `${endpoints.start.join(',')}|${endpoints.end.join(',')}`;
+                if (routeCache.has(cacheKey)) {
+                    return routeCache.get(cacheKey);
+                }
+
+                const params = new URLSearchParams({
+                    start_lat: endpoints.start[0],
+                    start_lng: endpoints.start[1],
+                    end_lat: endpoints.end[0],
+                    end_lng: endpoints.end[1],
+                });
+
+                try {
+                    const response = await fetch(`${routeUrl}?${params.toString()}`);
+                    if (!response.ok) {
+                        return [endpoints.start, endpoints.end];
+                    }
+
+                    const data = await response.json();
+                    const path = Array.isArray(data.path) && data.path.length >= 2
+                        ? data.path
+                        : [endpoints.start, endpoints.end];
+
+                    routeCache.set(cacheKey, path);
+
+                    return path;
+                } catch (error) {
+                    return [endpoints.start, endpoints.end];
+                }
+            }
+
+            async function fetchChainedRoadPath(waypoints) {
+                if (!Array.isArray(waypoints) || waypoints.length < 2) {
+                    return waypoints || [];
+                }
+
+                const cacheKey = waypoints.map(point => `${point.lat},${point.lng}`).join('|');
+                if (routeCache.has(cacheKey)) {
+                    return routeCache.get(cacheKey);
+                }
+
+                const params = new URLSearchParams();
+                waypoints.forEach((point, index) => {
+                    params.append(`waypoints[${index}][lat]`, point.lat);
+                    params.append(`waypoints[${index}][lng]`, point.lng);
+                });
+
+                try {
+                    const response = await fetch(`${routeUrl}?${params.toString()}`);
+                    if (!response.ok) {
+                        return waypoints.map(point => [point.lat, point.lng]);
+                    }
+
+                    const data = await response.json();
+                    const path = Array.isArray(data.path) && data.path.length >= 2
+                        ? data.path
+                        : waypoints.map(point => [point.lat, point.lng]);
+
+                    routeCache.set(cacheKey, path);
+
+                    return path;
+                } catch (error) {
+                    return waypoints.map(point => [point.lat, point.lng]);
+                }
+            }
+
+            function renderCable(cable, path) {
+                if (!path || path.length < 2) {
+                    return null;
+                }
+
+                const line = L.polyline(path, {
                     color: cable.color,
                     weight: cable.weight,
                     opacity: 0.85,
@@ -368,13 +482,69 @@
 
                 line.addTo(layers.cables);
 
-                const center = midpoint(cable.path);
+                let labelMarker = null;
+                const center = midpoint(path);
                 if (center && cable.label) {
-                    L.marker(center, {
+                    labelMarker = L.marker(center, {
                         icon: cableLabelIcon(cable.label, cable.color),
                         interactive: false,
                     }).addTo(layers.labels);
                 }
+
+                return { line, labelMarker, path };
+            }
+
+            mapData.cables.forEach(cable => {
+                if (!cable.path || cable.path.length < 2) {
+                    return;
+                }
+
+                const rendered = renderCable(cable, cable.path);
+                if (!rendered) {
+                    return;
+                }
+
+                cableEntries.push({
+                    cable,
+                    basePath: cable.path,
+                    ...rendered,
+                });
+            });
+
+            async function applyRoadRouting(enabled) {
+                for (const entry of cableEntries) {
+                    let path = entry.basePath;
+
+                    if (enabled && entry.cable.straight_line && entry.cable.endpoints) {
+                        path = await fetchRoadPath(entry.cable.endpoints);
+                    }
+
+                    entry.line.setLatLngs(path);
+                    entry.path = path;
+
+                    if (entry.labelMarker) {
+                        const center = midpoint(path);
+                        if (center) {
+                            entry.labelMarker.setLatLng(center);
+                        }
+                    }
+                }
+
+                for (const entry of routableEntries) {
+                    let path = entry.basePath;
+
+                    if (enabled && Array.isArray(entry.waypoints) && entry.waypoints.length >= 2) {
+                        path = await fetchChainedRoadPath(entry.waypoints);
+                    }
+
+                    entry.line.setLatLngs(path);
+                    entry.path = path;
+                }
+            }
+
+            const followRoadsToggle = document.getElementById('follow-roads');
+            followRoadsToggle.addEventListener('change', (event) => {
+                applyRoadRouting(event.target.checked);
             });
 
             mapData.links.forEach(link => {
@@ -404,11 +574,75 @@
                 }
             });
 
-            if (layers.nodes.getLayers().length) {
-                const bounds = L.featureGroup([
+            const jointIcon = L.divIcon({
+                className: 'gis-marker-wrap',
+                html: '<div style="width:16px;height:16px;border-radius:50%;background:#D84315;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,.35)"></div>',
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+            });
+
+            (mapData.joints || []).forEach(joint => {
+                const marker = L.marker([joint.latitude, joint.longitude], { icon: jointIcon });
+                marker.bindPopup(`
+                    <div class="gis-popup">
+                        <strong>${joint.label}</strong>
+                        <div class="meta">${joint.joint_type_label || ''}</div>
+                        ${joint.source_code && joint.target_code ? `<div class="meta">${joint.source_code} → ${joint.target_code}</div>` : ''}
+                        ${joint.core_number ? `<div class="meta">Core ${joint.core_number}</div>` : ''}
+                    </div>
+                `);
+                marker.addTo(layers.joints);
+
+                (joint.routes || []).forEach(route => {
+                    if (!route.path || route.path.length < 2) return;
+
+                    const line = L.polyline(route.path, {
+                        color: route.color,
+                        weight: 4,
+                        opacity: 0.85,
+                        dashArray: '8,6',
+                    }).bindPopup(`<div class="gis-popup"><strong>${route.label}</strong></div>`)
+                      .addTo(layers.joints);
+
+                    routableEntries.push({
+                        line,
+                        basePath: route.path,
+                        waypoints: route.waypoints || [],
+                        straight_line: route.straight_line !== false,
+                    });
+                });
+            });
+
+            (mapData.odp_routes || []).forEach(route => {
+                if (!route.path || route.path.length < 2) return;
+
+                const line = L.polyline(route.path, {
+                    color: route.color || '#1565C0',
+                    weight: 3,
+                    opacity: 0.7,
+                    dashArray: '4,8',
+                }).bindPopup(`<div class="gis-popup"><strong>${route.label}</strong><div class="meta">${odpRouteLabel}</div></div>`)
+                  .addTo(layers.odpRoutes);
+
+                routableEntries.push({
+                    line,
+                    basePath: route.path,
+                    waypoints: route.waypoints || [],
+                    straight_line: route.straight_line !== false,
+                });
+            });
+
+            if (followRoadsToggle.checked) {
+                applyRoadRouting(true);
+            }
+
+            if (layers.nodes.getLayers().length || (mapData.joints || []).length) {
+                const boundsGroup = L.featureGroup([
                     ...layers.nodes.getLayers(),
                     ...layers.cables.getLayers(),
-                ]).getBounds();
+                    ...layers.joints.getLayers(),
+                ]);
+                const bounds = boundsGroup.getBounds();
                 if (bounds.isValid()) {
                     map.fitBounds(bounds.pad(0.15));
                 }
@@ -420,10 +654,7 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.gis-base-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-
-                    map.removeLayer(activeBase);
-                    activeBase = btn.dataset.base === 'street' ? street : satellite;
-                    activeBase.addTo(map);
+                    setBaseMap(btn.dataset.base);
                 });
             });
 
@@ -435,6 +666,12 @@
             });
             document.getElementById('layer-links').addEventListener('change', e => {
                 e.target.checked ? map.addLayer(layers.links) : map.removeLayer(layers.links);
+            });
+            document.getElementById('layer-joints').addEventListener('change', e => {
+                e.target.checked ? map.addLayer(layers.joints) : map.removeLayer(layers.joints);
+            });
+            document.getElementById('layer-odp-routes').addEventListener('change', e => {
+                e.target.checked ? map.addLayer(layers.odpRoutes) : map.removeLayer(layers.odpRoutes);
             });
             document.getElementById('layer-labels').addEventListener('change', e => {
                 e.target.checked ? map.addLayer(layers.labels) : map.removeLayer(layers.labels);
