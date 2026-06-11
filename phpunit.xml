@@ -32,5 +32,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="HOSTING_SETUP_KEY" value="test-hosting-setup-key"/>
+        <env name="CRON_SECRET_KEY" value="test-cron-secret-key"/>
     </php>
 </phpunit>

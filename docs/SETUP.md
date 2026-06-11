@@ -151,7 +151,8 @@ composer run setup           # setup ulang dari awal
 app/           # Controllers, Models, AI Agents
 config/        # ai.php, reverb.php, broadcasting.php
 database/      # Migrations (termasuk agent_conversations)
-docs/          # PROJECT_OVERVIEW.md, SETUP.md
+docs/          # Dokumentasi teknis HFNMS
+PANDUAN_AI/    # Panduan kerja AI (terpisah)
 resources/     # Blade views, CSS, JS
 routes/        # web.php, channels.php
 public/        # Document root
