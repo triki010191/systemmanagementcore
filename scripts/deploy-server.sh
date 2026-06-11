@@ -10,6 +10,14 @@ if [[ -x /opt/cpanel/ea-php83/root/usr/bin/php ]]; then
     PHP=/opt/cpanel/ea-php83/root/usr/bin/php
 fi
 
+COMPOSER=""
+for candidate in composer php composer.phar "$ROOT/composer.phar" "$HOME/bin/composer" /usr/local/bin/composer; do
+    if command -v "$candidate" >/dev/null 2>&1; then
+        COMPOSER="$candidate"
+        break
+    fi
+done
+
 echo "==> Deploy HFNMS (server)"
 echo "==> PHP: $($PHP -v | sed -n '1p')"
 
@@ -18,15 +26,30 @@ if [[ ! -f .env ]]; then
     exit 1
 fi
 
-echo "==> Composer install (production)..."
-composer install --no-dev --optimize-autoloader --no-interaction
+if [[ -f vendor/autoload.php ]]; then
+    echo "==> vendor/ sudah ada — OK"
+elif [[ -n "$COMPOSER" ]]; then
+    echo "==> Composer install (production)..."
+    if [[ "$COMPOSER" == "composer" ]] || [[ "$COMPOSER" == /usr/local/bin/composer ]] || [[ "$COMPOSER" == "$HOME/bin/composer" ]]; then
+        $COMPOSER install --no-dev --optimize-autoloader --no-interaction
+    elif [[ "$COMPOSER" == "php" ]] && [[ -f composer.phar ]]; then
+        $PHP composer.phar install --no-dev --optimize-autoloader --no-interaction
+    else
+        $PHP "$COMPOSER" install --no-dev --optimize-autoloader --no-interaction
+    fi
+else
+    echo "==> Composer tidak ditemukan. Install vendor/ di lokal lalu upload, atau:"
+  echo "    curl -sS https://getcomposer.org/installer | $PHP"
+  echo "    $PHP composer.phar install --no-dev --optimize-autoloader"
+    exit 1
+fi
 
 if command -v npm >/dev/null 2>&1 && [[ -f package.json ]]; then
     echo "==> Build frontend..."
     npm ci --ignore-scripts
     npm run build
 else
-    echo "==> Lewati npm build (npm tidak tersedia — build di lokal lalu commit public/build)"
+    echo "==> Lewati npm build (build assets di lokal, commit public/build)"
 fi
 
 echo "==> Migrasi database..."
@@ -47,4 +70,4 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 
 echo ""
 echo "Deploy selesai: $(date)"
-echo "Cek: php artisan about"
+echo "Cek: $PHP artisan about"
