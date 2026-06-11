@@ -11,11 +11,12 @@ deployment:
     - export DEPLOYPATH=/home/laksanat/public_html/
     - export REPOPATH=/home/laksanat/repositories/systemmanagementcore/
 
-    # Salin kode dari repo ke Document Root.
-    # File berikut DIKECUALIKAN agar tidak tertimpa/terhapus:
-    #   .env, vendor, storage, public/build, public/storage, .git
+    # Salin kode dari repo ke Document Root memakai tar (rsync tidak tersedia
+    # di hosting ini). File berikut DIKECUALIKAN agar tidak tertimpa/terhapus:
+    #   .git, .env, vendor, storage, node_modules, public/build, public/hot, public/storage
     - >-
-      /usr/bin/rsync -a
+      /bin/bash -lc "cd \"$REPOPATH\" &&
+      tar -cf -
       --exclude='.git'
       --exclude='.env'
       --exclude='vendor'
@@ -24,7 +25,7 @@ deployment:
       --exclude='public/build'
       --exclude='public/hot'
       --exclude='public/storage'
-      "$REPOPATH" "$DEPLOYPATH"
+      . | tar -xf - -C \"$DEPLOYPATH\""
 
     # Bersihkan cache Laravel setelah deploy (abaikan error bila artisan tidak ada).
     - /bin/bash -lc "cd \"$DEPLOYPATH\" && php artisan config:clear || true"
