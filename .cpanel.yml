@@ -1,0 +1,32 @@
+---
+deployment:
+  tasks:
+    # ====================================================================
+    # PENTING: ganti DEPLOYPATH ke Document Root website kamu.
+    #   - Domain utama biasanya : /home/laksanat/public_html
+    #   - Subdomain biasanya     : /home/laksanat/nama_subdomain
+    # Cek di cPanel > Domains, lihat kolom "Document Root".
+    # Tanda "/" di akhir WAJIB ada.
+    # ====================================================================
+    - export DEPLOYPATH=/home/laksanat/public_html/
+    - export REPOPATH=/home/laksanat/repositories/systemmanagementcore/
+
+    # Salin kode dari repo ke Document Root.
+    # File berikut DIKECUALIKAN agar tidak tertimpa/terhapus:
+    #   .env, vendor, storage, public/build, public/storage, .git
+    - >-
+      /usr/bin/rsync -a
+      --exclude='.git'
+      --exclude='.env'
+      --exclude='vendor'
+      --exclude='storage'
+      --exclude='node_modules'
+      --exclude='public/build'
+      --exclude='public/hot'
+      --exclude='public/storage'
+      "$REPOPATH" "$DEPLOYPATH"
+
+    # Bersihkan cache Laravel setelah deploy (abaikan error bila artisan tidak ada).
+    - /bin/bash -lc "cd \"$DEPLOYPATH\" && php artisan config:clear || true"
+    - /bin/bash -lc "cd \"$DEPLOYPATH\" && php artisan cache:clear || true"
+    - /bin/bash -lc "cd \"$DEPLOYPATH\" && php artisan view:clear || true"
