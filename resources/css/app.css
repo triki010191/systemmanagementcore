@@ -7,6 +7,22 @@
 }
 
 @layer components {
+    .auth-login-bg {
+        background: linear-gradient(
+            145deg,
+            #eef4ff 0%,
+            #dbe1ff 28%,
+            #cce5ff 58%,
+            #b8d9ff 100%
+        );
+    }
+
+    .auth-login-pattern {
+        background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.45) 1px, transparent 0);
+        background-size: 32px 32px;
+        opacity: 0.35;
+    }
+
     .technical-pattern {
         background-image: radial-gradient(circle at 2px 2px, #c2c6d9 1px, transparent 0);
         background-size: 32px 32px;
@@ -34,6 +50,11 @@
         min-width: 640px;
     }
 
+    /* Smooth horizontal scrolling for tables on touch devices */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+
     .path-trace-node::after {
         content: '';
         position: absolute;
@@ -47,5 +68,36 @@
 
     .path-trace-node:last-child::after {
         display: none;
+    }
+
+    .dashboard-noc {
+        min-height: 0;
+    }
+
+    @media (min-width: 1024px) {
+        .dashboard-noc {
+            max-height: calc(100dvh - 4.5rem);
+        }
+    }
+
+    /* Prevent long unbreakable strings (UUID, GPS, codes) from overflowing cards */
+    .break-anywhere {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
+
+/* --- Global responsive refinements (mobile-first) --- */
+@media (max-width: 639px) {
+    /* Scale down large page-title headers so they don't dominate small screens */
+    .text-headline-md {
+        font-size: 18px !important;
+        line-height: 24px !important;
+    }
+
+    /* Definition lists (key/value cards) stay readable instead of cramping */
+    dd.font-mono,
+    .font-mono {
+        overflow-wrap: anywhere;
     }
 }

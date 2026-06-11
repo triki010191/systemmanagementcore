@@ -54,20 +54,36 @@
                     @forelse ($schedules as $schedule)
                         @php
                             $isOverdue = $schedule->status === 'scheduled' && $schedule->scheduled_at->isPast();
+                            $priorityClass = match ($schedule->priority) {
+                                'critical' => 'bg-red-100 text-red-700',
+                                'high' => 'bg-orange-100 text-orange-700',
+                                'medium' => 'bg-yellow-100 text-yellow-700',
+                                default => 'bg-surface-container-high text-on-surface-variant',
+                            };
+                            $statusClass = match ($schedule->status) {
+                                'in_progress' => 'bg-blue-100 text-blue-700',
+                                'completed' => 'bg-green-100 text-green-700',
+                                'cancelled' => 'bg-surface-container-high text-on-surface-variant',
+                                default => $isOverdue ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700',
+                            };
                         @endphp
                         <tr class="border-t border-outline-variant hover:bg-surface-container-low/50 {{ $isOverdue ? 'bg-red-50/30' : '' }}">
-                            <td class="px-lg py-sm {{ $isOverdue ? 'text-error font-semibold' : '' }}">
+                            <td class="px-lg py-sm whitespace-nowrap {{ $isOverdue ? 'text-error font-semibold' : '' }}">
                                 {{ $schedule->scheduled_at->format('d M Y H:i') }}
                                 @if ($isOverdue)
-                                    <span class="text-[10px] block">{{ __('hfnms.overdue') }}</span>
+                                    <span class="text-[10px] block font-bold uppercase">{{ __('hfnms.overdue') }}</span>
                                 @endif
                             </td>
                             <td class="px-lg py-sm">{{ Str::limit($schedule->title, 40) }}</td>
-                            <td class="px-lg py-sm">{{ __('hfnms.maintenance_type_'.$schedule->schedule_type) }}</td>
-                            <td class="px-lg py-sm">{{ __('hfnms.maintenance_priority_'.$schedule->priority) }}</td>
-                            <td class="px-lg py-sm">{{ __('hfnms.maintenance_status_'.$schedule->status) }}</td>
+                            <td class="px-lg py-sm text-on-surface-variant">{{ __('hfnms.maintenance_type_'.$schedule->schedule_type) }}</td>
+                            <td class="px-lg py-sm">
+                                <span class="inline-block px-sm py-xs rounded text-[11px] font-bold {{ $priorityClass }}">{{ __('hfnms.maintenance_priority_'.$schedule->priority) }}</span>
+                            </td>
+                            <td class="px-lg py-sm">
+                                <span class="inline-block px-sm py-xs rounded text-[11px] font-bold {{ $statusClass }}">{{ __('hfnms.maintenance_status_'.$schedule->status) }}</span>
+                            </td>
                             <td class="px-lg py-sm font-mono">{{ $schedule->networkNode?->code ?? '—' }}</td>
-                            <td class="px-lg py-sm text-right space-x-sm">
+                            <td class="px-lg py-sm text-right space-x-sm whitespace-nowrap">
                                 <a href="{{ route('maintenance-schedules.show', $schedule) }}" class="text-primary font-semibold hover:underline">{{ __('hfnms.view') }}</a>
                                 @can('maintenance.manage')
                                     <a href="{{ route('maintenance-schedules.edit', $schedule) }}" class="text-on-surface-variant hover:text-primary">{{ __('hfnms.edit') }}</a>

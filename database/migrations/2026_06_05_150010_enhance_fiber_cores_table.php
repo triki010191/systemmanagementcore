@@ -17,14 +17,18 @@ return new class extends Migration
             $table->decimal('loss_db', 5, 2)->nullable()->after('color_name');
         });
 
-        DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'available'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'available'");
+        }
 
         DB::table('fiber_cores')->where('status', 'active')->update(['status' => 'used']);
         DB::table('fiber_cores')->where('status', 'spare')->update(['status' => 'available']);
         DB::table('fiber_cores')->where('status', 'dark')->update(['status' => 'available']);
         DB::table('fiber_cores')->where('status', 'fault')->update(['status' => 'broken']);
 
-        DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status ENUM('available','used','reserved','broken','maintenance') NOT NULL DEFAULT 'available'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status ENUM('available','used','reserved','broken','maintenance') NOT NULL DEFAULT 'available'");
+        }
     }
 
     public function down(): void
@@ -34,6 +38,8 @@ return new class extends Migration
             $table->dropColumn(['cable_tube_id', 'core_position_in_tube', 'loss_db']);
         });
 
-        DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status ENUM('active','spare','dark','fault') NOT NULL DEFAULT 'spare'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE fiber_cores MODIFY COLUMN status ENUM('active','spare','dark','fault') NOT NULL DEFAULT 'spare'");
+        }
     }
 };

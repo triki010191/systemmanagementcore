@@ -15,11 +15,17 @@ class StoreUserRequest extends FormRequest
     /** @return array<string, mixed> */
     public function rules(): array
     {
+        $roleRules = ['required', 'string', Rule::exists('roles', 'name')];
+
+        if (! $this->user()?->hasRole('super-admin')) {
+            $roleRules[] = Rule::notIn(['super-admin']);
+        }
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'string', Rule::exists('roles', 'name')],
+            'role' => $roleRules,
         ];
     }
 }

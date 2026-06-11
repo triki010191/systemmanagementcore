@@ -18,7 +18,21 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->get('/profile');
 
-        $response->assertOk();
+        $response
+            ->assertOk()
+            ->assertSee(__('hfnms.logout'), false);
+    }
+
+    public function test_user_can_logout_from_profile_page(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this
+            ->actingAs($user)
+            ->post('/logout');
+
+        $response->assertRedirect(route('login'));
+        $this->assertGuest();
     }
 
     public function test_profile_information_can_be_updated(): void

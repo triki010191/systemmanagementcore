@@ -3,6 +3,9 @@
 @php
     $appName = $cmsSettings['branding']['app_name'] ?? config('app.name', 'HFNMS');
     $companyName = $cmsSettings['branding']['company_name'] ?? 'Hinet Fiber';
+    $logoUrl = ! empty($cmsSettings['branding']['logo_path'])
+        ? \Illuminate\Support\Facades\Storage::url($cmsSettings['branding']['logo_path'])
+        : asset('images/logo.png');
 @endphp
 
 <!DOCTYPE html>
@@ -21,15 +24,20 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-surface text-on-surface font-sans text-body-md min-h-dvh flex flex-col items-center justify-start sm:justify-center relative overflow-x-hidden overflow-y-auto antialiased py-lg sm:py-xl">
-    <div class="absolute inset-0 technical-pattern z-0 pointer-events-none"></div>
-    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary opacity-5 blur-[120px] rounded-full pointer-events-none"></div>
+<body class="auth-login-bg text-on-surface font-sans text-body-md min-h-dvh flex flex-col items-center justify-start sm:justify-center relative overflow-x-hidden overflow-y-auto antialiased py-lg sm:py-xl">
+    <div class="absolute inset-0 auth-login-pattern z-0 pointer-events-none"></div>
+    <div class="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] bg-primary opacity-[0.12] blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] bg-[#00a9ce] opacity-[0.15] blur-[100px] rounded-full pointer-events-none"></div>
+    <div class="absolute top-[40%] left-[50%] -translate-x-1/2 w-[60%] h-[30%] bg-white opacity-20 blur-[80px] rounded-full pointer-events-none"></div>
 
     <main class="relative z-10 w-full max-w-[420px] px-lg flex-shrink-0">
         <div class="flex flex-col items-center mb-lg sm:mb-xl">
-            <div class="mb-md flex items-center justify-center bg-primary-container p-sm rounded-lg shadow-sm">
-                <span class="material-symbols-outlined text-on-primary-container text-[32px]" style="font-variation-settings: 'FILL' 1;">router</span>
+            <div class="mb-md flex items-center justify-center">
+                <img
+                    src="{{ $logoUrl }}"
+                    alt="{{ $companyName }}"
+                    class="h-20 w-20 object-contain"
+                >
             </div>
             <h1 class="font-semibold text-headline-md text-primary tracking-tight">{{ $companyName }}</h1>
             <p class="text-label-caps text-on-surface-variant uppercase mt-xs">{{ __('hfnms.enterprise_management_system') }}</p>

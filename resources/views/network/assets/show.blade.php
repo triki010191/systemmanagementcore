@@ -7,7 +7,7 @@
                 <h2 class="font-semibold text-headline-md text-on-surface">{{ $node->code }}</h2>
                 <p class="text-body-sm text-on-surface-variant">{{ $node->name }} · {{ $type->label() }}</p>
             </div>
-            <div class="flex items-center gap-sm">
+            <div class="flex items-center flex-wrap gap-sm">
                 @if ($type === \App\Enums\NetworkNodeType::Customer)
                     @if ($asset->connection)
                         <a href="{{ route('customer-connections.show', $asset->connection) }}" class="px-md py-sm border border-outline-variant rounded text-body-sm font-semibold hover:bg-surface-container-low">

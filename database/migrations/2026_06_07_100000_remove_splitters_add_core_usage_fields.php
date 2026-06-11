@@ -21,6 +21,7 @@ return new class extends Migration
         if (Schema::hasColumn('customer_connections', 'splitter_port_id')) {
             Schema::table('customer_connections', function (Blueprint $table) {
                 $table->dropForeign(['splitter_port_id']);
+                $table->dropIndex(['splitter_port_id']);
                 $table->dropColumn('splitter_port_id');
             });
         }
@@ -40,8 +41,10 @@ return new class extends Migration
 
         DB::table('network_nodes')->where('type', 'splitter')->delete();
 
-        DB::statement("ALTER TABLE network_nodes MODIFY COLUMN type ENUM('pop', 'olt', 'otb', 'odc', 'odp', 'customer') NOT NULL");
-        DB::statement("ALTER TABLE network_links MODIFY COLUMN link_type ENUM('fiber_cable', 'patch_cord', 'splice', 'drop') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE network_nodes MODIFY COLUMN type ENUM('pop', 'olt', 'otb', 'odc', 'odp', 'customer') NOT NULL");
+            DB::statement("ALTER TABLE network_links MODIFY COLUMN link_type ENUM('fiber_cable', 'patch_cord', 'splice', 'drop') NOT NULL");
+        }
 
         Schema::table('odcs', function (Blueprint $table) {
             $table->unsignedSmallInteger('cores_from_otb')->default(0)->after('split_ratio_default');
@@ -63,7 +66,9 @@ return new class extends Migration
             $table->dropColumn(['cores_from_otb', 'cores_to_odp']);
         });
 
-        DB::statement("ALTER TABLE network_nodes MODIFY COLUMN type ENUM('pop', 'olt', 'otb', 'odc', 'splitter', 'odp', 'customer') NOT NULL");
-        DB::statement("ALTER TABLE network_links MODIFY COLUMN link_type ENUM('fiber_cable', 'patch_cord', 'splitter_connection', 'splice', 'drop') NOT NULL");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE network_nodes MODIFY COLUMN type ENUM('pop', 'olt', 'otb', 'odc', 'splitter', 'odp', 'customer') NOT NULL");
+            DB::statement("ALTER TABLE network_links MODIFY COLUMN link_type ENUM('fiber_cable', 'patch_cord', 'splitter_connection', 'splice', 'drop') NOT NULL");
+        }
     }
 };

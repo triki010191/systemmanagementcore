@@ -34,5 +34,6 @@
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="HOSTING_SETUP_KEY" value="test-hosting-setup-key"/>
         <env name="CRON_SECRET_KEY" value="test-cron-secret-key"/>
+        <env name="ALLOW_REGISTRATION" value="true"/>
     </php>
 </phpunit>

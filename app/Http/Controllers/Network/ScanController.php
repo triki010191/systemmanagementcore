@@ -2,27 +2,17 @@
 
 namespace App\Http\Controllers\Network;
 
-use App\Exports\CustomerTemplateExport;
-use App\Exports\OdpTemplateExport;
 use App\Http\Controllers\Controller;
-use App\Imports\CustomerImport;
-use App\Imports\OdpImport;
 use App\Models\FiberCable;
 use App\Models\NetworkNode;
 use App\Services\Network\AssetPhotoService;
 use App\Services\Network\QrCodeService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Maatwebsite\Excel\Facades\Excel;
-use RuntimeException;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ScanController extends Controller
 {
     public function __construct(
         private readonly QrCodeService $qrCodeService,
-        private readonly NetworkAssetService $assetService,
         private readonly AssetPhotoService $photoService,
     ) {}
 

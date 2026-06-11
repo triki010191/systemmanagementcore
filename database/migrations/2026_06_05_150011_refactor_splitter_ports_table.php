@@ -29,17 +29,23 @@ return new class extends Migration
             $table->index(['splitter_id', 'direction', 'status']);
         });
 
-        DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'empty'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'empty'");
+        }
 
         DB::table('splitter_ports')->where('status', 'spare')->update(['status' => 'empty']);
         DB::table('splitter_ports')->where('status', 'fault')->update(['status' => 'broken']);
 
-        DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status ENUM('empty','active','reserved','broken','maintenance') NOT NULL DEFAULT 'empty'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status ENUM('empty','active','reserved','broken','maintenance') NOT NULL DEFAULT 'empty'");
+        }
     }
 
     public function down(): void
     {
-        DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status ENUM('active','spare','fault') NOT NULL DEFAULT 'spare'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE splitter_ports MODIFY COLUMN status ENUM('active','spare','fault') NOT NULL DEFAULT 'spare'");
+        }
 
         Schema::table('splitter_ports', function (Blueprint $table) {
             $table->dropForeign(['connected_core_id']);

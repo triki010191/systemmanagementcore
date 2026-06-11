@@ -7,11 +7,19 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement("ALTER TABLE fiber_cables MODIFY COLUMN status ENUM('active', 'inactive', 'damaged', 'planned') NOT NULL DEFAULT 'planned'");
     }
 
     public function down(): void
     {
+        if (DB::getDriverName() !== 'mysql') {
+            return;
+        }
+
         DB::statement("ALTER TABLE fiber_cables MODIFY COLUMN status ENUM('active', 'inactive', 'damaged', 'planned') NOT NULL DEFAULT 'active'");
     }
 };

@@ -40,7 +40,9 @@ Route::get('/scan/cable/{code}', [ScanController::class, 'cable'])->name('scan.c
 Route::get('/scan/{uuid}', [ScanController::class, 'show'])->name('scan.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware('can:network.view')
+        ->name('dashboard');
 
     Route::middleware('can:path-tracing.view')->prefix('path-tracing')->name('path-tracing.')->group(function () {
         Route::get('/', [PathTracingController::class, 'index'])->name('index');

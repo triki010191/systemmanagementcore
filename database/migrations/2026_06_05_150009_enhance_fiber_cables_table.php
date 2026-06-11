@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('qr_code_path')->nullable()->after('installed_at');
         });
 
-        DB::statement('ALTER TABLE fiber_cables MODIFY core_count SMALLINT UNSIGNED NOT NULL COMMENT "12, 24, 48, or 96"');
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE fiber_cables MODIFY core_count SMALLINT UNSIGNED NOT NULL COMMENT "12, 24, 48, or 96"');
+        }
     }
 
     public function down(): void
